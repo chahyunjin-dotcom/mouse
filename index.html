@@ -1,0 +1,2912 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖱️ 마우스 연습 - 재미있게 배워요!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .screen {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0; left: 0;
+        }
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        /* 시작 화면 */
+        #start-screen {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        #start-screen h1 {
+            font-size: 3.5rem;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+        #start-screen p {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .btn {
+            padding: 20px 50px;
+            font-size: 1.8rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .btn-start {
+            background: #FFD700;
+            color: #333;
+        }
+        /* 캐릭터 선택 화면 */
+        #character-screen {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            justify-content: flex-start;
+            padding: 20px 30px;
+            gap: 0;
+        }
+        #character-screen h2 {
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        #character-screen > p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 14px;
+        }
+        /* 가로 2단 레이아웃 */
+        .character-section {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            gap: 24px;
+            width: 100%;
+            max-width: 860px;
+            flex: 1;
+        }
+        /* 왼쪽 패널: 이름 + 사진 업로드 */
+        .char-panel-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            background: rgba(255,255,255,0.55);
+            border-radius: 24px;
+            padding: 20px 16px;
+        }
+        /* 오른쪽 패널: 기본 캐릭터 */
+        .char-panel-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            background: rgba(255,255,255,0.55);
+            border-radius: 24px;
+            padding: 20px 16px;
+        }
+        .char-panel-right .panel-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #555;
+        }
+        /* 업로드 영역 */
+        .upload-area {
+            background: white;
+            border: 3px dashed #aaa;
+            border-radius: 20px;
+            padding: 18px 28px;
+            cursor: pointer;
+            transition: border-color 0.3s, background 0.3s;
+            text-align: center;
+            width: 100%;
+        }
+        .upload-area:hover {
+            border-color: #f5576c;
+            background: #fff5f5;
+        }
+        .upload-area span {
+            font-size: 1.15rem;
+            color: #666;
+        }
+        .upload-area .icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .or-divider {
+            font-size: 1.1rem;
+            color: #888;
+            font-weight: bold;
+        }
+        /* 기본 캐릭터 2x2 그리드 */
+        .default-characters {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            justify-items: center;
+        }
+        .char-option {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid #ddd;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.2rem;
+            background: white;
+        }
+        .char-option:hover {
+            transform: scale(1.15);
+            border-color: #f5576c;
+        }
+        .char-option.selected {
+            border-color: #f5576c;
+            box-shadow: 0 0 20px rgba(245,87,108,0.5);
+            transform: scale(1.15);
+        }
+        .uploaded-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #f5576c;
+            box-shadow: 0 0 20px rgba(245,87,108,0.5);
+        }
+        /* 시작 버튼 - 하단 고정 */
+        .char-bottom {
+            width: 100%;
+            max-width: 860px;
+            display: flex;
+            justify-content: center;
+            padding-top: 14px;
+        }
+        .btn-go {
+            background: #4CAF50;
+            color: white;
+        }
+
+        /* 이름 입력 */
+        .name-input-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+        .name-input-label {
+            font-size: 1.2rem;
+            color: #555;
+            font-weight: bold;
+        }
+        .name-input {
+            font-size: 1.5rem;
+            padding: 12px 24px;
+            border: 3px solid #ddd;
+            border-radius: 50px;
+            outline: none;
+            text-align: center;
+            width: 260px;
+            transition: border-color 0.2s;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .name-input:focus {
+            border-color: #f5576c;
+            box-shadow: 0 0 10px rgba(245,87,108,0.25);
+        }
+
+        /* 캐릭터 + 이름 래퍼 (게임 안에서) */
+        .char-with-name {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            pointer-events: none;
+        }
+        .char-name-tag {
+            background: rgba(0,0,0,0.65);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 헤더 플레이어 이름 */
+        .player-name-badge {
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: #FFD700;
+            color: #333;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 게임 헤더 캐릭터+이름 뱃지 */
+        .header-char-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #FFD700;
+            border-radius: 30px;
+            padding: 4px 14px 4px 4px;
+            max-width: 180px;
+        }
+        .header-char-badge .hcb-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid white;
+        }
+        .header-char-badge .hcb-emoji {
+            font-size: 1.8rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .header-char-badge .hcb-name {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 화면 상단 캐릭터+이름 플로팅 배지 */
+        .screen-char-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.92);
+            border-radius: 40px;
+            padding: 6px 20px 6px 6px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+            margin-bottom: 18px;
+        }
+        .screen-char-card .scc-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f5576c;
+            flex-shrink: 0;
+        }
+        .screen-char-card .scc-emoji {
+            font-size: 2.4rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .screen-char-card .scc-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* 결과 화면 캐릭터+이름 */
+        .result-char-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+        .result-char-row .rcr-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #FFD700;
+            box-shadow: 0 0 15px rgba(255,215,0,0.5);
+        }
+        .result-char-row .rcr-emoji {
+            font-size: 3.5rem;
+            line-height: 1;
+        }
+        .result-char-row .rcr-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* 미리보기 이름 */
+        #upload-preview-area .preview-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #a18cd1;
+            margin-top: 4px;
+        }
+
+        /* 게임 선택 화면 */
+        #game-select-screen {
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+        }
+        #game-select-screen h2 {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .game-buttons {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .game-btn {
+            width: 200px;
+            height: 200px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .game-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .game-btn .emoji {
+            font-size: 4rem;
+        }
+        .game-btn-click { background: #FF6B6B; color: white; }
+        .game-btn-move { background: #4ECDC4; color: white; }
+        .game-btn-drag { background: #FFE66D; color: #333; }
+        .game-btn-select { background: #a18cd1; color: white; }
+        .game-btn-puzzle { background: linear-gradient(135deg, #f7971e, #ffd200); color: #333; }
+
+        /* ===== 퍼즐 게임 화면 ===== */
+        #puzzle-screen {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0;
+            overflow: hidden;
+        }
+        .puzzle-header {
+            width: 100%;
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+        .puzzle-header .btn-back {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .puzzle-header .puzzle-info {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #FFD700;
+        }
+        .puzzle-header .puzzle-timer {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #4ECDC4;
+        }
+        .puzzle-body {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            justify-content: center;
+            flex: 1;
+            width: 100%;
+            padding: 12px 16px;
+            overflow: hidden;
+            min-height: 0; /* flex 자식이 shrink 되도록 */
+        }
+        /* 왼쪽: 흩어진 퍼즐 조각 보관함 */
+        .puzzle-tray {
+            width: 200px;
+            flex-shrink: 0;
+            align-self: stretch;           /* 부모 높이만큼 늘어남 */
+            background: rgba(255,255,255,0.07);
+            border-radius: 16px;
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            align-items: center;
+            border: 2px dashed rgba(255,255,255,0.2);
+            overflow-y: auto;              /* 세로 스크롤 */
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
+        }
+        .puzzle-tray::-webkit-scrollbar { width: 5px; }
+        .puzzle-tray::-webkit-scrollbar-track { background: transparent; }
+        .puzzle-tray::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        .puzzle-tray-label {
+            width: 100%;
+            text-align: center;
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 8px;
+            flex-shrink: 0;
+        }
+        /* 트레이 안 조각 — 축소 썸네일로 표시 */
+        .puzzle-piece.in-tray {
+            position: relative !important;
+            display: block;
+            transform-origin: top left;
+            margin-bottom: 6px;
+            cursor: grab;
+            flex-shrink: 0;
+        }
+        /* 오른쪽: 퍼즐 완성 보드 */
+        .puzzle-board-wrap {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+        }
+        .puzzle-board-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.55);
+        }
+        #puzzle-board {
+            position: relative;
+            background: rgba(255,255,255,0.05);
+            border: 2px dashed rgba(255,215,0,0.35);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        /* 퍼즐 조각 */
+        .puzzle-piece {
+            position: absolute;
+            cursor: grab;
+            border-radius: 4px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+            transition: box-shadow 0.15s, transform 0.15s;
+            user-select: none;
+        }
+        .puzzle-piece:hover {
+            box-shadow: 0 6px 20px rgba(255,215,0,0.5);
+            transform: scale(1.04);
+            z-index: 200 !important;
+        }
+        .puzzle-piece.dragging {
+            cursor: grabbing;
+            box-shadow: 0 12px 30px rgba(255,215,0,0.7);
+            transform: scale(1.08);
+            z-index: 300 !important;
+        }
+        .puzzle-piece.placed {
+            cursor: default;
+            box-shadow: 0 0 0 3px #4CAF50;
+            transform: none !important;
+        }
+        /* 퍼즐 보드 위 슬롯 (정답 위치 가이드) */
+        .puzzle-slot {
+            position: absolute;
+            border: 2px dashed rgba(255,255,255,0.18);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.04);
+            pointer-events: none;
+        }
+        .puzzle-slot.matched {
+            border-color: rgba(76,175,80,0.6);
+            background: rgba(76,175,80,0.08);
+        }
+        /* 완성 오버레이 */
+        .puzzle-complete-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            border-radius: 12px;
+        }
+        .puzzle-complete-overlay h3 {
+            font-size: 2.2rem;
+            color: #FFD700;
+            text-shadow: 0 0 20px #FFD700;
+            margin-bottom: 10px;
+        }
+        .puzzle-complete-overlay p {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        /* ===== 퍼즐 이미지 선택 화면 ===== */
+        #puzzle-select-screen {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        }
+        #puzzle-select-screen h2 {
+            font-size: 2.2rem;
+            color: #FFD700;
+            margin-bottom: 6px;
+            text-shadow: 0 0 20px rgba(255,215,0,0.4);
+        }
+        #puzzle-select-screen p {
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 24px;
+        }
+        .puzzle-img-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 820px;
+            margin-bottom: 24px;
+        }
+        .puzzle-img-card {
+            width: 160px;
+            background: rgba(255,255,255,0.07);
+            border: 3px solid rgba(255,255,255,0.15);
+            border-radius: 18px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .puzzle-img-card:hover {
+            transform: scale(1.07);
+            border-color: #FFD700;
+            box-shadow: 0 0 22px rgba(255,215,0,0.45);
+        }
+        .puzzle-img-card.selected {
+            border-color: #4ade80;
+            box-shadow: 0 0 22px rgba(74,222,128,0.5);
+            transform: scale(1.07);
+        }
+        .puzzle-img-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+        }
+        .puzzle-img-card .card-name {
+            padding: 8px 6px;
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            font-weight: bold;
+        }
+        .puzzle-select-btns {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .btn-random-puzzle {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #333;
+            border: none;
+            border-radius: 30px;
+            padding: 14px 32px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .btn-random-puzzle:hover {
+            transform: scale(1.07);
+            box-shadow: 0 6px 20px rgba(247,151,30,0.5);
+        }
+        .btn-start-puzzle {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: #1a2e1a;
+            border: none;
+            border-radius: 30px;
+            padding: 14px 32px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.18s, box-shadow 0.18s;
+            display: none;
+        }
+        .btn-start-puzzle:hover {
+            transform: scale(1.07);
+            box-shadow: 0 6px 20px rgba(67,233,123,0.5);
+        }
+        .btn-back-puzzle-select {
+            background: rgba(255,255,255,0.12);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-radius: 30px;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .btn-back-puzzle-select:hover { background: rgba(255,255,255,0.22); }
+
+        /* 레벨 선택 화면 */
+        #level-select-screen {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        #level-select-screen h2 {
+            font-size: 2.3rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        #level-select-screen p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 25px;
+        }
+        .level-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 900px;
+        }
+        .level-btn {
+            width: 190px;
+            height: 190px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            padding: 15px;
+        }
+        .level-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .level-btn .lv-emoji { font-size: 2.5rem; }
+        .level-btn .lv-title { font-size: 1.2rem; }
+        .level-btn .lv-desc { font-size: 0.85rem; opacity: 0.85; text-align: center; }
+        .lv1-btn { background: #43e97b; color: #fff; }
+        .lv2-btn { background: #4facfe; color: #fff; }
+        .lv3-btn { background: #fa709a; color: #fff; }
+        .lv4-btn { background: #f093fb; color: #fff; }
+        .btn-back-level {
+            margin-top: 20px;
+            background: #aaa;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        .btn-back-level:hover { background: #888; }
+
+        /* 게임 헤더 레벨 표시 */
+        .level-badge {
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: #FF6B6B;
+            color: white;
+        }
+        /* 게임 안내 메시지 */
+        .game-hint {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            z-index: 90;
+            white-space: nowrap;
+        }
+        /* 클릭 타입 배지 */
+        .click-target.right-click { border: 4px solid #4facfe; }
+        .click-target.shift-click { border: 4px solid #fa709a; }
+        .click-target.shift-ctrl-click { border: 4px solid #f093fb; }
+        /* 잘못된 클릭 흔들림 */
+        @keyframes shake {
+            0%,100%{ transform: translateX(0); }
+            25%{ transform: translateX(-8px); }
+            75%{ transform: translateX(8px); }
+        }
+        .shake { animation: shake 0.3s ease; }
+        /* 정답 확인 파티클 */
+        .hit-particle {
+            position: fixed;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 999;
+            animation: pop 0.6s ease forwards;
+        }
+        @keyframes pop {
+            0% { transform: scale(0) translateY(0); opacity: 1; }
+            100% { transform: scale(1.5) translateY(-60px); opacity: 0; }
+        }
+        /* 게임 화면 공통 */
+        #game-screen {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            position: relative;
+        }
+        .game-header {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        .game-header .score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        .game-header .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f5576c;
+        }
+        .btn-back {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        .btn-back:hover {
+            background: #ee5a5a;
+        }
+        .game-area {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            padding-top: 70px;
+        }
+        /* 클릭 게임 */
+        .click-target {
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;  /* 이름 태그가 원 바깥에 표시되도록 */
+        }
+        .click-target:active {
+            transform: scale(0.8);
+        }
+        .click-target img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* 이동 게임 - 별 모으기 */
+        .move-character {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: visible;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            transition: left 0.05s, top 0.05s;
+            pointer-events: none;
+            z-index: 50;
+        }
+        .move-character img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .star-item {
+            position: absolute;
+            font-size: 2.5rem;
+            animation: twinkle 0.8s infinite alternate;
+        }
+        @keyframes twinkle {
+            from { transform: scale(1); opacity: 0.8; }
+            to { transform: scale(1.2); opacity: 1; }
+        }
+        /* 드래그 게임 */
+        .drag-item {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            z-index: 10;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+            transition: filter 0.1s;
+            /* 자식 absolute 포지션 기준 */
+            isolation: isolate;
+        }
+        .drag-item:active { cursor: grabbing; }
+        .drag-item svg { width: 90px; height: 90px; display: block; }
+
+        .drop-zone {
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+        /* 드롭존 내부 SVG를 아이템과 같은 90×90으로 맞춤 */
+        .drop-zone > div > svg { width: 90px; height: 90px; opacity: 0.4; display: block; }
+        .drop-zone .zone-label {
+            font-size: 0.82rem;
+            font-weight: bold;
+            color: #555;
+            text-align: center;
+            position: absolute;
+            bottom: -22px;
+            white-space: nowrap;
+        }
+        .drop-zone.highlight > div > svg { opacity: 0.8; }
+        .drop-zone.highlight { filter: drop-shadow(0 0 10px rgba(76,175,80,0.9)); }
+        .drop-zone.filled > div > svg { opacity: 1; }
+        .drop-zone.wrong-drop { animation: shake 0.3s ease; }
+        /* 결과 화면 */
+        #result-screen {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        #result-screen h2 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .result-score {
+            font-size: 5rem;
+            color: #FFD700;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+        .result-message {
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .result-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        .btn-retry {
+            background: #4ECDC4;
+            color: white;
+        }
+        .btn-home {
+            background: #FFD700;
+            color: #333;
+        }
+
+        /* 축하 효과 */
+        .confetti {
+            position: fixed;
+            top: -10px;
+            font-size: 2rem;
+            animation: fall linear forwards;
+            z-index: 1000;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(720deg); }
+        }
+
+        /* ===== 텍스트 블록 지정 게임 ===== */
+        .select-game-wrap {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            user-select: none; /* 기본 선택 막고 JS로만 제어 */
+        }
+        .select-mission-box {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 18px 35px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+        }
+        .select-mission-label {
+            font-size: 1.1rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .select-mission-target {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f5576c;
+            letter-spacing: 2px;
+        }
+        .select-text-box {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            max-width: 750px;
+            width: 100%;
+            font-size: 1.8rem;
+            line-height: 2;
+            text-align: center;
+            cursor: text;
+            user-select: text;
+            -webkit-user-select: text;
+            position: relative;
+            word-break: keep-all;
+        }
+        .select-text-box .word {
+            display: inline;
+            border-radius: 4px;
+            padding: 2px 1px;
+            cursor: text;
+        }
+        .select-text-box .word.target-word {
+            background: #fff3cd;
+            border-bottom: 3px solid #FFD700;
+        }
+        .select-text-box .word.selected-correct {
+            background: #d4edda;
+            color: #155724;
+        }
+        .select-text-box .word.selected-wrong {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .select-feedback {
+            font-size: 1.4rem;
+            font-weight: bold;
+            min-height: 2rem;
+            padding: 8px 24px;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+        .select-feedback.correct { background: #d4edda; color: #155724; }
+        .select-feedback.wrong   { background: #f8d7da; color: #721c24; }
+        .select-feedback.idle    { background: transparent; color: transparent; }
+        .select-progress {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .select-progress-bar {
+            width: 200px;
+            height: 16px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .select-progress-fill {
+            height: 100%;
+            background: #FFD700;
+            border-radius: 10px;
+            transition: width 0.4s;
+        }
+        .select-progress-text {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 시작 화면 -->
+    <div id="start-screen" class="screen active">
+        <h1>🖱️ 마우스 연습</h1>
+        <p>마우스를 재미있게 배워봐요!</p>
+        <button class="btn btn-start" onclick="showScreen('character-screen')">시작하기! 🚀</button>
+    </div>
+
+    <!-- 캐릭터 선택 화면 -->
+    <div id="character-screen" class="screen">
+        <h2>🎭 캐릭터를 골라봐요!</h2>
+        <p>이름을 쓰고, 사진을 넣거나 캐릭터를 골라봐요</p>
+
+        <div class="character-section">
+            <!-- 왼쪽: 이름 + 사진 업로드 -->
+            <div class="char-panel-left">
+                <!-- 이름 입력 -->
+                <div class="name-input-wrap">
+                    <label class="name-input-label" for="player-name-input">✏️ 내 이름을 써봐요!</label>
+                    <input type="text" id="player-name-input" class="name-input"
+                           placeholder="이름 입력" maxlength="8"
+                           oninput="onNameInput()">
+                </div>
+
+                <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                    <span class="icon">📷</span>
+                    <span>여기를 눌러서<br>친구 사진 넣기!</span>
+                </div>
+                <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleUpload(event)">
+
+                <div id="upload-preview-area" style="display:none; text-align:center;">
+                    <img id="upload-preview" class="uploaded-preview" src="" alt="업로드된 사진">
+                    <p class="preview-name" id="preview-name-display"></p>
+                    <p style="margin-top:4px; color:#f5576c; font-weight:bold; font-size:0.95rem;">내 친구 선택됨! ✨</p>
+                </div>
+            </div>
+
+            <!-- 오른쪽: 기본 캐릭터 4개 -->
+            <div class="char-panel-right">
+                <div class="panel-title">🐾 기본 캐릭터 고르기</div>
+                <div class="default-characters">
+                    <div class="char-option" onclick="selectChar(this, '🐱')" data-char="🐱">🐱</div>
+                    <div class="char-option" onclick="selectChar(this, '🐶')" data-char="🐶">🐶</div>
+                    <div class="char-option" onclick="selectChar(this, '🐰')" data-char="🐰">🐰</div>
+                    <div class="char-option" onclick="selectChar(this, '🦊')" data-char="🦊">🦊</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 시작 버튼 항상 아래에 고정 -->
+        <div class="char-bottom">
+            <button class="btn btn-go" onclick="goToGameSelect()" id="btn-go" style="display:none;">게임 시작! 🎮</button>
+        </div>
+    </div>
+    <!-- 게임 선택 화면 -->
+    <div id="game-select-screen" class="screen">
+        <div id="gss-char-card" class="screen-char-card" style="display:none;"></div>
+        <h2>🎮 어떤 연습을 할까?</h2>
+        <div class="game-buttons">
+            <button class="game-btn game-btn-click" onclick="showScreen('level-select-screen')">
+                <span class="emoji">👆</span>
+                클릭 연습
+            </button>
+            <button class="game-btn game-btn-move" onclick="startGame('move')">
+                <span class="emoji">🏃</span>
+                이동 연습
+            </button>
+            <button class="game-btn game-btn-drag" onclick="startGame('drag')">
+                <span class="emoji">✋</span>
+                드래그 연습
+            </button>
+            <button class="game-btn game-btn-select" onclick="startGame('select')">
+                <span class="emoji">🖊️</span>
+                블록 지정 연습
+            </button>
+            <button class="game-btn game-btn-puzzle" onclick="startGame('puzzle')">
+                <span class="emoji">🧩</span>
+                퍼즐 맞추기
+            </button>
+        </div>
+    </div>
+
+    <!-- 클릭 연습 레벨 선택 화면 -->
+    <div id="level-select-screen" class="screen">
+        <div id="lss-char-card" class="screen-char-card" style="display:none;"></div>
+        <h2>👆 클릭 연습 - 레벨 선택!</h2>
+        <p>어려운 레벨에 도전해봐요 💪</p>
+        <div class="level-buttons">
+            <button class="level-btn lv1-btn" onclick="startGame('click', 1)">
+                <span class="lv-emoji">🖱️</span>
+                <span class="lv-title">레벨 1</span>
+                <span class="lv-desc">마우스<br>왼쪽 클릭!</span>
+            </button>
+            <button class="level-btn lv2-btn" onclick="startGame('click', 2)">
+                <span class="lv-emoji">🖱️✨</span>
+                <span class="lv-title">레벨 2</span>
+                <span class="lv-desc">마우스<br>오른쪽 클릭!</span>
+            </button>
+            <button class="level-btn lv3-btn" onclick="startGame('click', 3)">
+                <span class="lv-emoji">⌨️🖱️</span>
+                <span class="lv-title">레벨 3</span>
+                <span class="lv-desc">Shift 누르고<br>왼쪽 클릭!</span>
+            </button>
+            <button class="level-btn lv4-btn" onclick="startGame('click', 4)">
+                <span class="lv-emoji">🔥🖱️</span>
+                <span class="lv-title">레벨 4</span>
+                <span class="lv-desc">Shift + Ctrl<br>누르고 클릭!</span>
+            </button>
+        </div>
+        <button class="btn-back-level" onclick="showScreen('game-select-screen')">⬅️ 돌아가기</button>
+    </div>
+
+    <!-- 퍼즐 이미지 선택 화면 -->
+    <div id="puzzle-select-screen" class="screen">
+        <h2>🧩 퍼즐 이미지 선택</h2>
+        <p>맞추고 싶은 이미지를 골라봐요! 또는 랜덤으로 시작해요 🎲</p>
+        <div class="puzzle-img-grid" id="puzzle-img-grid">
+            <!-- JS로 카드 생성 -->
+        </div>
+        <div class="puzzle-select-btns">
+            <button class="btn-back-puzzle-select" onclick="showScreen('game-select-screen')">⬅️ 돌아가기</button>
+            <button class="btn-random-puzzle" onclick="puzzleSelectRandom()">🎲 랜덤 시작!</button>
+            <button class="btn-start-puzzle" id="btn-start-puzzle" onclick="puzzleStartWithSelected()">▶️ 시작!</button>
+        </div>
+    </div>
+
+    <!-- 퍼즐 게임 화면 -->
+    <div id="puzzle-screen" class="screen">
+        <div class="puzzle-header">
+            <button class="btn-back" onclick="endPuzzleGame()">⬅️ 돌아가기</button>
+            <span class="puzzle-info" id="puzzle-info">🧩 0 / 10 완성</span>
+            <span id="puzzle-img-name" style="font-size:0.95rem;color:rgba(255,255,255,0.55);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+            <span class="puzzle-timer" id="puzzle-timer">⏰ 0초</span>
+        </div>
+        <div class="puzzle-body">
+            <!-- 왼쪽: 조각 보관함 -->
+            <div class="puzzle-tray" id="puzzle-tray">
+                <div class="puzzle-tray-label">조각을 오른쪽 판에 놓아요!</div>
+            </div>
+            <!-- 오른쪽: 완성 보드 -->
+            <div class="puzzle-board-wrap">
+                <div class="puzzle-board-label">📍 여기에 맞춰봐요</div>
+                <div id="puzzle-board"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 게임 화면 -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <button class="btn-back" onclick="endGame()">⬅️ 돌아가기</button>
+            <span class="player-name-badge" id="header-player-name"></span>
+            <span class="level-badge" id="level-badge" style="display:none;">레벨 1</span>
+            <span class="score" id="score-display">점수: 0</span>
+            <span class="timer" id="timer-display">⏰ 30초</span>
+        </div>
+        <div class="game-area" id="game-area"></div>
+    </div>
+
+    <!-- 결과 화면 -->
+    <div id="result-screen" class="screen">
+        <h2>🎉 잘했어요!</h2>
+        <div id="result-player-name" class="result-char-row"></div>
+        <div class="result-score" id="result-score">0</div>
+        <div class="result-message" id="result-message">대단해요!</div>
+        <div class="result-buttons">
+            <button class="btn btn-retry" onclick="retryGame()">다시하기 🔄</button>
+            <button class="btn btn-home" id="btn-other-game" onclick="showScreen('game-select-screen')">다른 게임 🎮</button>
+        </div>
+    </div>
+    <script>
+        // 전역 변수
+        let selectedCharacter = null;
+        let uploadedImageURL = null;
+        let playerName = '';
+        let currentGame = null;
+        let currentLevel = 1;
+        let score = 0;
+        let timeLeft = 30;
+        let gameTimer = null;
+        let gameInterval = null;
+
+        // 화면 전환
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            // 캐릭터 선택 화면 복귀 시 기존 선택 상태 복원
+            if (screenId === 'character-screen' && selectedCharacter) {
+                document.getElementById('btn-go').style.display = 'inline-block';
+            }
+            // 캐릭터+이름 카드 업데이트
+            updateScreenCharCard(screenId);
+        }
+
+        // 화면별 캐릭터+이름 카드 렌더링
+        function updateScreenCharCard(screenId) {
+            if (!selectedCharacter) return;
+            const cardIds = {
+                'game-select-screen':  'gss-char-card',
+                'level-select-screen': 'lss-char-card',
+            };
+            const cardId = cardIds[screenId];
+            if (!cardId) return;
+            const card = document.getElementById(cardId);
+            if (!card) return;
+            card.innerHTML = '';
+            card.style.display = 'flex';
+
+            // 아바타
+            if (selectedCharacter === 'uploaded') {
+                const img = document.createElement('img');
+                img.src = uploadedImageURL;
+                img.className = 'scc-avatar';
+                card.appendChild(img);
+            } else {
+                const em = document.createElement('span');
+                em.className = 'scc-emoji';
+                em.textContent = selectedCharacter;
+                card.appendChild(em);
+            }
+
+            // 이름
+            if (playerName) {
+                const nm = document.createElement('span');
+                nm.className = 'scc-name';
+                nm.textContent = playerName + ' 안녕! 👋';
+                card.appendChild(nm);
+            }
+        }
+
+        // 이름 입력 핸들러
+        function onNameInput() {
+            playerName = document.getElementById('player-name-input').value.trim();
+            // 미리보기 이름 업데이트
+            const nameDisplay = document.getElementById('preview-name-display');
+            if (nameDisplay) nameDisplay.textContent = playerName ? playerName + ' 👋' : '';
+            // 캐릭터가 이미 선택된 상태면 시작 버튼 유지
+            if (selectedCharacter) {
+                document.getElementById('btn-go').style.display = 'inline-block';
+            }
+        }
+
+        // 이미지 업로드 처리
+        function handleUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImageURL = e.target.result;
+                selectedCharacter = 'uploaded';
+                document.getElementById('upload-preview').src = uploadedImageURL;
+                document.getElementById('upload-preview-area').style.display = 'block';
+                // 이름 미리보기 업데이트
+                const nameDisplay = document.getElementById('preview-name-display');
+                nameDisplay.textContent = playerName ? playerName + ' 👋' : '';
+                // 기본 캐릭터 선택 해제
+                document.querySelectorAll('.char-option').forEach(c => c.classList.remove('selected'));
+                document.getElementById('btn-go').style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 기본 캐릭터 선택
+        function selectChar(el, emoji) {
+            selectedCharacter = emoji;
+            uploadedImageURL = null;
+            document.querySelectorAll('.char-option').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('upload-preview-area').style.display = 'none';
+            document.getElementById('btn-go').style.display = 'inline-block';
+        }
+
+        // 게임 선택 화면으로
+        function goToGameSelect() {
+            if (!selectedCharacter) {
+                alert('캐릭터를 먼저 골라주세요! 😊');
+                return;
+            }
+            showScreen('game-select-screen');
+        }
+        // 캐릭터 요소 생성 헬퍼 (이름 태그 포함)
+        function createCharElement(size) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'char-with-name';
+            wrapper.style.pointerEvents = 'none';
+
+            if (selectedCharacter === 'uploaded') {
+                const img = document.createElement('img');
+                img.src = uploadedImageURL;
+                img.style.width = size + 'px';
+                img.style.height = size + 'px';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.style.display = 'block';
+                wrapper.appendChild(img);
+            } else {
+                const span = document.createElement('span');
+                span.textContent = selectedCharacter;
+                span.style.fontSize = (size * 0.7) + 'px';
+                span.style.lineHeight = size + 'px';
+                span.style.display = 'block';
+                span.style.textAlign = 'center';
+                wrapper.appendChild(span);
+            }
+
+            // 이름 태그 (이름이 있을 때만)
+            if (playerName) {
+                const tag = document.createElement('div');
+                tag.className = 'char-name-tag';
+                tag.textContent = playerName;
+                wrapper.appendChild(tag);
+            }
+
+            return wrapper;
+        }
+
+        // 게임 시작
+        function startGame(type, level) {
+            currentGame = type;
+            currentLevel = level || 1;
+            score = 0;
+            timeLeft = 30;
+            updateScore();
+            updateTimer();
+            showScreen('game-screen');
+            const area = document.getElementById('game-area');
+            area.innerHTML = '';
+
+            // 헤더 캐릭터+이름 배지
+            const nameEl = document.getElementById('header-player-name');
+            nameEl.innerHTML = '';
+            if (selectedCharacter) {
+                nameEl.className = 'header-char-badge';
+                nameEl.style.display = 'flex';
+                if (selectedCharacter === 'uploaded') {
+                    const img = document.createElement('img');
+                    img.src = uploadedImageURL;
+                    img.className = 'hcb-avatar';
+                    nameEl.appendChild(img);
+                } else {
+                    const em = document.createElement('span');
+                    em.className = 'hcb-emoji';
+                    em.textContent = selectedCharacter;
+                    nameEl.appendChild(em);
+                }
+                if (playerName) {
+                    const nm = document.createElement('span');
+                    nm.className = 'hcb-name';
+                    nm.textContent = playerName;
+                    nameEl.appendChild(nm);
+                }
+            } else {
+                nameEl.style.display = 'none';
+            }
+
+            // 레벨 배지 처리
+            const badge = document.getElementById('level-badge');
+            if (type === 'click') {
+                const levelColors = { 1: '#43e97b', 2: '#4facfe', 3: '#fa709a', 4: '#f093fb' };
+                const levelNames = { 1: '레벨1 👆왼쪽클릭', 2: '레벨2 👉오른쪽클릭', 3: '레벨3 ⇧+클릭', 4: '레벨4 ⇧+Ctrl+클릭' };
+                badge.textContent = levelNames[currentLevel];
+                badge.style.background = levelColors[currentLevel];
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+
+            if (type === 'click') startClickGame();
+            else if (type === 'move') startMoveGame();
+            else if (type === 'drag') startDragGame();
+            else if (type === 'select') startSelectGame();
+            else if (type === 'puzzle') { showPuzzleSelectScreen(); return; }
+
+            // 블록 지정은 문제 수 기반이므로 타이머 없음
+            if (type === 'select') {
+                document.getElementById('timer-display').textContent = '📝 6문제';
+                return;
+            }
+
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                if (timeLeft <= 0) {
+                    endGame();
+                    showResult();
+                }
+            }, 1000);
+        }
+
+        function updateScore() {
+            document.getElementById('score-display').textContent = '⭐ 점수: ' + score;
+        }
+        function updateTimer() {
+            document.getElementById('timer-display').textContent = '⏰ ' + timeLeft + '초';
+        }
+        // ===== 클릭 게임 (레벨 1~4) =====
+        const CLICK_LEVEL_CONFIG = {
+            1: { label: '마우스 왼쪽 버튼을 클릭하세요! 👆', borderColor: '#43e97b', points: 10 },
+            2: { label: '마우스 오른쪽 버튼을 클릭하세요! 👉', borderColor: '#4facfe', points: 15 },
+            3: { label: 'Shift 키를 누른 채로 왼쪽 클릭! ⇧+👆', borderColor: '#fa709a', points: 20 },
+            4: { label: 'Shift + Ctrl 누르고 왼쪽 클릭! ⇧+Ctrl+👆', borderColor: '#f093fb', points: 30 },
+        };
+
+        function startClickGame() {
+            const area = document.getElementById('game-area');
+            const cfg = CLICK_LEVEL_CONFIG[currentLevel];
+
+            // 힌트 문구
+            const hint = document.createElement('div');
+            hint.className = 'game-hint';
+            hint.id = 'click-hint';
+            hint.textContent = cfg.label;
+            area.appendChild(hint);
+
+            // 우클릭 기본 메뉴 차단
+            area.addEventListener('contextmenu', blockContextMenu);
+
+            spawnClickTarget();
+        }
+
+        function blockContextMenu(e) { e.preventDefault(); }
+
+        function spawnClickTarget() {
+            const area = document.getElementById('game-area');
+            const old = area.querySelector('.click-target');
+            if (old) old.remove();
+
+            const cfg = CLICK_LEVEL_CONFIG[currentLevel];
+            const size = 65 + Math.random() * 40;
+            const target = document.createElement('div');
+            target.className = 'click-target';
+            target.style.width = size + 'px';
+            target.style.height = size + 'px';
+            target.style.border = '4px solid ' + cfg.borderColor;
+
+            const maxX = area.clientWidth - size;
+            const maxY = area.clientHeight - size - 60; // 힌트 영역 아래
+            target.style.left = Math.random() * maxX + 'px';
+            target.style.top = (60 + Math.random() * maxY) + 'px';
+            target.appendChild(createCharElement(size - 8));
+
+            // 이벤트 처리
+            target.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                if (checkClickLevel(e)) {
+                    hitTarget(target, cfg.points);
+                } else {
+                    // 틀린 클릭 - 흔들림
+                    target.classList.add('shake');
+                    target.addEventListener('animationend', () => target.classList.remove('shake'), { once: true });
+                    score = Math.max(0, score - 3);
+                    updateScore();
+                    showWrongFeedback(e.clientX, e.clientY);
+                }
+            });
+
+            area.appendChild(target);
+        }
+
+        function checkClickLevel(e) {
+            const lv = currentLevel;
+            if (lv === 1) {
+                return e.button === 0 && !e.shiftKey && !e.ctrlKey;
+            } else if (lv === 2) {
+                return e.button === 2;
+            } else if (lv === 3) {
+                return e.button === 0 && e.shiftKey && !e.ctrlKey;
+            } else if (lv === 4) {
+                return e.button === 0 && e.shiftKey && e.ctrlKey;
+            }
+            return false;
+        }
+
+        function hitTarget(target, points) {
+            score += points;
+            updateScore();
+            // 성공 파티클
+            const rect = target.getBoundingClientRect();
+            showHitParticle(rect.left + rect.width / 2, rect.top + rect.height / 2, '✨');
+            target.style.transition = 'transform 0.15s, opacity 0.15s';
+            target.style.transform = 'scale(1.4)';
+            target.style.opacity = '0';
+            setTimeout(() => spawnClickTarget(), 250);
+        }
+
+        function showHitParticle(x, y, emoji) {
+            const p = document.createElement('div');
+            p.className = 'hit-particle';
+            p.textContent = emoji;
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 700);
+        }
+
+        function showWrongFeedback(x, y) {
+            const p = document.createElement('div');
+            p.className = 'hit-particle';
+            p.textContent = '❌';
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 700);
+        }
+        // ===== 이동 게임 (마우스 따라다니며 별 모으기) =====
+        let moveCharEl = null;
+
+        function startMoveGame() {
+            const area = document.getElementById('game-area');
+
+            // 캐릭터 생성
+            moveCharEl = document.createElement('div');
+            moveCharEl.className = 'move-character';
+            moveCharEl.appendChild(createCharElement(80));
+            moveCharEl.style.left = '50%';
+            moveCharEl.style.top = '50%';
+            area.appendChild(moveCharEl);
+
+            // 마우스 따라 이동
+            area.addEventListener('mousemove', moveHandler);
+
+            // 별 생성
+            spawnStars();
+            gameInterval = setInterval(spawnStars, 3000);
+        }
+
+        function moveHandler(e) {
+            const area = document.getElementById('game-area');
+            const rect = area.getBoundingClientRect();
+            const x = e.clientX - rect.left - 40;
+            const y = e.clientY - rect.top - 40;
+            if (moveCharEl) {
+                moveCharEl.style.left = x + 'px';
+                moveCharEl.style.top = y + 'px';
+            }
+            checkStarCollision();
+        }
+
+        function spawnStars() {
+            const area = document.getElementById('game-area');
+            const starEmojis = ['⭐', '🌟', '💎', '🍎', '🍕', '🎈'];
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('div');
+                star.className = 'star-item';
+                star.textContent = starEmojis[Math.floor(Math.random() * starEmojis.length)];
+                star.style.left = Math.random() * (area.clientWidth - 40) + 'px';
+                star.style.top = Math.random() * (area.clientHeight - 40) + 'px';
+                area.appendChild(star);
+            }
+        }
+
+        function checkStarCollision() {
+            if (!moveCharEl) return;
+            const charRect = moveCharEl.getBoundingClientRect();
+            const stars = document.querySelectorAll('.star-item');
+            stars.forEach(star => {
+                const starRect = star.getBoundingClientRect();
+                if (charRect.left < starRect.right &&
+                    charRect.right > starRect.left &&
+                    charRect.top < starRect.bottom &&
+                    charRect.bottom > starRect.top) {
+                    star.remove();
+                    score += 5;
+                    updateScore();
+                }
+            });
+        }
+        // ===== 드래그 게임 (도형 맞추기) =====
+        let dragItem = null;
+        let dragOffsetX = 0, dragOffsetY = 0;
+        let dragMatchedCount = 0;
+
+        // 도형 정의: id, 이름, SVG path 생성 함수(색상 인자)
+        const SHAPES = [
+            {
+                id: 'circle',
+                name: '동그라미',
+                svg: (color) => `<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="45" cy="45" r="38" fill="${color}" stroke="white" stroke-width="3"/>
+                </svg>`
+            },
+            {
+                id: 'star',
+                name: '별',
+                svg: (color) => `<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="45,8 56,34 84,34 62,52 70,78 45,62 20,78 28,52 6,34 34,34"
+                        fill="${color}" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+                </svg>`
+            },
+            {
+                id: 'triangle',
+                name: '세모',
+                svg: (color) => `<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="45,8 84,80 6,80"
+                        fill="${color}" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+                </svg>`
+            },
+            {
+                id: 'blob',
+                name: '울퉁불퉁',
+                svg: (color) => `<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M45,10 C58,8 72,18 78,30 C85,44 80,60 70,68 C60,77 44,80 32,74 C18,67 8,52 10,38 C12,22 30,12 45,10 Z"
+                        fill="${color}" stroke="white" stroke-width="3"/>
+                </svg>`
+            },
+            {
+                id: 'square',
+                name: '정사각형',
+                svg: (color) => `<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="70" height="70" rx="4"
+                        fill="${color}" stroke="white" stroke-width="3"/>
+                </svg>`
+            },
+            {
+                id: 'rectangle',
+                name: '직사각형',
+                svg: (color) => `<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="5" y="22" width="80" height="46" rx="4"
+                        fill="${color}" stroke="white" stroke-width="3"/>
+                </svg>`
+            },
+            {
+                id: 'parallelogram',
+                name: '평행사변형',
+                svg: (color) => `<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="22,78 6,12 68,12 84,78"
+                        fill="${color}" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+                </svg>`
+            },
+        ];
+
+        const SHAPE_COLORS = ['#FF6B6B','#4ECDC4','#FFD93D','#a18cd1','#f78fb3','#3dc1d3','#e55039'];
+
+        function makeSvgEl(svgStr) {
+            const wrap = document.createElement('div');
+            wrap.style.lineHeight = '0';
+            wrap.innerHTML = svgStr;
+            return wrap;
+        }
+
+        // 겹치지 않는 랜덤 위치 생성
+        function randomPos(areaW, areaH, size, margin, placed) {
+            const maxTry = 120;
+            for (let t = 0; t < maxTry; t++) {
+                const x = margin + Math.random() * (areaW - size - margin * 2);
+                const y = margin + Math.random() * (areaH - size - margin * 2);
+                // 기존 배치 도형들과 겹침 검사 (중심 거리 기준)
+                const cx = x + size / 2, cy = y + size / 2;
+                const minDist = size * 1.1;
+                const ok = placed.every(p => Math.hypot(cx - p.cx, cy - p.cy) >= minDist);
+                if (ok) { placed.push({ cx, cy }); return { x, y }; }
+            }
+            // 최대 시도 초과 시 그냥 반환
+            const x = margin + Math.random() * (areaW - size - margin * 2);
+            const y = margin + Math.random() * (areaH - size - margin * 2);
+            placed.push({ cx: x + size / 2, cy: y + size / 2 });
+            return { x, y };
+        }
+
+        function startDragGame() {
+            const area = document.getElementById('game-area');
+            dragMatchedCount = 0;
+
+            // 힌트 문구
+            const hint = document.createElement('div');
+            hint.className = 'game-hint';
+            hint.style.fontSize = '1.05rem';
+            hint.textContent = '✋ 같은 모양의 윤곽에 드래그해서 놓아요!';
+            area.appendChild(hint);
+
+            const areaW = area.clientWidth;
+            const areaH = area.clientHeight;
+            const ITEM_SIZE = 90;   // 아이템 크기
+            const ZONE_SIZE = 110;  // 드롭존 크기
+            const HEADER_H = 110;   // 힌트 영역 아래 여백
+            const MARGIN   = 14;
+
+            // 화면을 좌/우 절반으로 분리해 아이템과 드롭존이 명확히 구분되도록 배치
+            // 왼쪽 절반: 아이템, 오른쪽 절반: 드롭존
+            const halfW = areaW / 2;
+            const placedItems = [];
+            const placedZones = [];
+
+            // 도형 순서 섞기
+            const shapeOrder = [...SHAPES].sort(() => Math.random() - 0.5);
+
+            // 드롭존 먼저 생성 (오른쪽 절반, 도형 순서도 다시 섞기)
+            const zoneOrder = [...shapeOrder].sort(() => Math.random() - 0.5);
+            zoneOrder.forEach(shape => {
+                const zone = document.createElement('div');
+                zone.className = 'drop-zone';
+                zone.dataset.shapeId = shape.id;
+
+                // 오른쪽 절반 랜덤 위치
+                const pos = randomPos(halfW, areaH - HEADER_H, ZONE_SIZE, MARGIN, placedZones);
+                zone.style.left = (halfW + pos.x) + 'px';
+                zone.style.top  = (HEADER_H + pos.y) + 'px';
+
+                // 윤곽 SVG — 해당 도형의 색상을 흐리게 사용 (같은 색이지만 반투명)
+                const shapeColor = SHAPE_COLORS[SHAPES.findIndex(s => s.id === shape.id)];
+                zone.appendChild(makeSvgEl(shape.svg(shapeColor.replace('#', 'rgba(') + ',0.28)').replace('rgba(', '#').replace(',0.28)', '')));
+                // 간단히 처리: opacity로 대신함
+                const zoneSvgWrap = makeSvgEl(shape.svg(shapeColor));
+                zoneSvgWrap.style.opacity = '0.32';
+                // 이미 추가된 것 대신 이것 사용
+                zone.innerHTML = '';
+                zone.appendChild(zoneSvgWrap);
+
+                const label = document.createElement('div');
+                label.className = 'zone-label';
+                label.textContent = shape.name;
+                zone.appendChild(label);
+
+                area.appendChild(zone);
+            });
+
+            // 아이템 생성 (왼쪽 절반)
+            shapeOrder.forEach(shape => {
+                const item = document.createElement('div');
+                item.className = 'drag-item';
+                item.dataset.shapeId = shape.id;
+                const color = SHAPE_COLORS[SHAPES.findIndex(s => s.id === shape.id)];
+                item.dataset.color = color;
+
+                // 왼쪽 절반 랜덤 위치
+                const pos = randomPos(halfW, areaH - HEADER_H, ITEM_SIZE, MARGIN, placedItems);
+                item.style.left = pos.x + 'px';
+                item.style.top  = (HEADER_H + pos.y) + 'px';
+
+                // 도형 SVG
+                item.appendChild(makeSvgEl(shape.svg(color)));
+
+                // 캐릭터 오버레이
+                const charOverlay = document.createElement('div');
+                charOverlay.style.position = 'absolute';
+                charOverlay.style.top = '50%';
+                charOverlay.style.left = '50%';
+                charOverlay.style.transform = 'translate(-50%, -50%)';
+                charOverlay.style.zIndex = '15';
+                charOverlay.style.pointerEvents = 'none';
+                if (selectedCharacter === 'uploaded') {
+                    const img = document.createElement('img');
+                    img.src = uploadedImageURL;
+                    img.style.width = '40px';
+                    img.style.height = '40px';
+                    img.style.borderRadius = '50%';
+                    img.style.objectFit = 'cover';
+                    img.style.border = '2px solid white';
+                    img.style.display = 'block';
+                    charOverlay.appendChild(img);
+                } else {
+                    charOverlay.style.fontSize = '26px';
+                    charOverlay.style.lineHeight = '1';
+                    charOverlay.textContent = selectedCharacter;
+                }
+                item.appendChild(charOverlay);
+
+                // 이름 태그
+                if (playerName) {
+                    const tag = document.createElement('div');
+                    tag.className = 'char-name-tag';
+                    tag.style.position = 'absolute';
+                    tag.style.bottom = '-22px';
+                    tag.style.left = '50%';
+                    tag.style.transform = 'translateX(-50%)';
+                    tag.style.zIndex = '20';
+                    tag.textContent = playerName;
+                    item.appendChild(tag);
+                }
+
+                item.addEventListener('mousedown', startDrag);
+                area.appendChild(item);
+            });
+
+            // 구분선 (왼쪽=아이템, 오른쪽=드롭존 안내)
+            const divider = document.createElement('div');
+            divider.style.cssText = `
+                position:absolute; left:${halfW}px; top:${HEADER_H}px;
+                width:2px; height:${areaH - HEADER_H}px;
+                background:rgba(255,255,255,0.35);
+                border-left:2px dashed rgba(255,255,255,0.4);
+                pointer-events:none; z-index:3;
+            `;
+            area.appendChild(divider);
+
+            // 좌/우 안내 라벨
+            const lblLeft = document.createElement('div');
+            lblLeft.style.cssText = `position:absolute;left:${halfW/2}px;top:${HEADER_H+6}px;
+                transform:translateX(-50%);font-size:0.9rem;color:rgba(255,255,255,0.75);
+                font-weight:bold;pointer-events:none;z-index:3;`;
+            lblLeft.textContent = '← 드래그 하는 도형';
+            area.appendChild(lblLeft);
+
+            const lblRight = document.createElement('div');
+            lblRight.style.cssText = `position:absolute;left:${halfW + halfW/2}px;top:${HEADER_H+6}px;
+                transform:translateX(-50%);font-size:0.9rem;color:rgba(255,255,255,0.75);
+                font-weight:bold;pointer-events:none;z-index:3;`;
+            lblRight.textContent = '여기에 놓아요 →';
+            area.appendChild(lblRight);
+
+            area.addEventListener('mousemove', doDrag);
+            area.addEventListener('mouseup', endDrag);
+        }
+
+        function startDrag(e) {
+            if (e.currentTarget.dataset.placed === 'true') return;
+            dragItem = e.currentTarget;
+            const rect = dragItem.getBoundingClientRect();
+            dragOffsetX = e.clientX - rect.left;
+            dragOffsetY = e.clientY - rect.top;
+            dragItem.style.zIndex = 100;
+        }
+
+        function doDrag(e) {
+            if (!dragItem) return;
+            const area = document.getElementById('game-area');
+            const areaRect = area.getBoundingClientRect();
+            dragItem.style.left = (e.clientX - areaRect.left - dragOffsetX) + 'px';
+            dragItem.style.top  = (e.clientY - areaRect.top  - dragOffsetY) + 'px';
+
+            // 드롭존 하이라이트 — 중심 거리 기반, 같은 도형만
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                const near = isNearCenter(dragItem, zone);
+                const isSameShape = zone.dataset.shapeId === dragItem.dataset.shapeId;
+                if (near && isSameShape && !zone.dataset.filled) {
+                    zone.classList.add('highlight');
+                } else {
+                    zone.classList.remove('highlight');
+                }
+            });
+        }
+
+        // 아이템 중심이 드롭존 중심에서 SNAP_RADIUS px 이내인지 판정
+        const SNAP_RADIUS = 55;
+        function isNearCenter(item, zone) {
+            const ir = item.getBoundingClientRect();
+            const zr = zone.getBoundingClientRect();
+            const ix = ir.left + ir.width  / 2;
+            const iy = ir.top  + ir.height / 2;
+            const zx = zr.left + zr.width  / 2;
+            const zy = zr.top  + zr.height / 2;
+            return Math.hypot(ix - zx, iy - zy) < SNAP_RADIUS;
+        }
+
+        function endDrag(e) {
+            if (!dragItem) return;
+            let matched = false;
+
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                if (matched) return;
+                const near = isNearCenter(dragItem, zone);
+
+                if (near && !zone.dataset.filled) {
+                    if (zone.dataset.shapeId === dragItem.dataset.shapeId) {
+                        // 정답 — 아이템(90×90)을 드롭존(110×110) 중앙에 정확히 스냅
+                        zone.dataset.filled = 'true';
+                        zone.classList.remove('highlight');
+                        zone.classList.add('filled');
+
+                        // zone의 중심 = item의 중심이 되도록: item.left = zone.left + (110-90)/2
+                        dragItem.style.left = (zone.offsetLeft + 10) + 'px';
+                        dragItem.style.top  = (zone.offsetTop  + 10) + 'px';
+                        dragItem.style.zIndex = 8;
+                        dragItem.dataset.placed = 'true';
+                        dragItem.style.cursor = 'default';
+
+                        score += 25;
+                        updateScore();
+                        const zr = zone.getBoundingClientRect();
+                        showHitParticle(zr.left + zr.width / 2, zr.top + zr.height / 2, '✨');
+
+                        dragMatchedCount++;
+                        if (dragMatchedCount >= SHAPES.length) {
+                            score += 20;
+                            updateScore();
+                            setTimeout(() => showHitParticle(window.innerWidth / 2, window.innerHeight / 2, '🎉'), 200);
+                        }
+                        matched = true;
+                    } else {
+                        // 오답 — 다른 도형 위에 놓으려 함
+                        zone.classList.add('wrong-drop');
+                        zone.addEventListener('animationend', () => zone.classList.remove('wrong-drop'), { once: true });
+                        score = Math.max(0, score - 5);
+                        updateScore();
+                        showWrongFeedback(e.clientX, e.clientY);
+                    }
+                }
+            });
+
+            if (dragItem && !matched) {
+                dragItem.style.zIndex = 10;
+            }
+            dragItem = null;
+
+            // 모든 드롭존 하이라이트 제거
+            document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('highlight'));
+        }
+
+        function isOverlap(r1, r2) {
+            return !(r1.right < r2.left || r1.left > r2.right ||
+                     r1.bottom < r2.top || r1.top > r2.bottom);
+        }
+        // 게임 종료
+        function endGame() {
+            clearInterval(gameTimer);
+            clearInterval(gameInterval);
+            gameTimer = null;
+            gameInterval = null;
+            const area = document.getElementById('game-area');
+            area.removeEventListener('mousemove', moveHandler);
+            area.removeEventListener('mousemove', doDrag);
+            area.removeEventListener('mouseup', endDrag);
+            area.removeEventListener('contextmenu', blockContextMenu);
+            moveCharEl = null;
+            dragItem = null;
+
+            // 블록 지정 게임 진행률 UI 숨기기
+            const progWrap = document.getElementById('select-prog-wrap');
+            if (progWrap) progWrap.style.display = 'none';
+
+            // 돌아갈 화면 결정
+            if (currentGame === 'click') {
+                showScreen('level-select-screen');
+            } else {
+                showScreen('game-select-screen');
+            }        }
+
+        function showResult() {
+            showScreen('result-screen');
+
+            // 결과 화면 캐릭터+이름 행
+            const nameEl = document.getElementById('result-player-name');
+            nameEl.innerHTML = '';
+            if (selectedCharacter) {
+                if (selectedCharacter === 'uploaded') {
+                    const img = document.createElement('img');
+                    img.src = uploadedImageURL;
+                    img.className = 'rcr-avatar';
+                    nameEl.appendChild(img);
+                } else {
+                    const em = document.createElement('span');
+                    em.className = 'rcr-emoji';
+                    em.textContent = selectedCharacter;
+                    nameEl.appendChild(em);
+                }
+            }
+            if (playerName) {
+                const nm = document.createElement('span');
+                nm.className = 'rcr-name';
+                nm.textContent = playerName + ' 님의 결과 🏅';
+                nameEl.appendChild(nm);
+            }
+
+            document.getElementById('result-score').textContent = score + '점!';
+
+            let msg = '';
+            if (score >= 200) msg = '천재야! 너무 잘했어! 🏆';
+            else if (score >= 100) msg = '대단해요! 잘했어! 🌟';
+            else if (score >= 50) msg = '좋았어! 조금만 더 연습하자! 💪';
+            else msg = '괜찮아! 다시 해보자! 😊';
+            document.getElementById('result-message').textContent = msg;
+
+            // 다른 게임 버튼 - 클릭 연습이면 레벨 선택, 아니면 게임 선택
+            const otherBtn = document.getElementById('btn-other-game');
+            if (currentGame === 'click') {
+                otherBtn.onclick = () => showScreen('level-select-screen');
+                otherBtn.textContent = '다른 레벨 🎯';
+            } else {
+                otherBtn.onclick = () => showScreen('game-select-screen');
+                otherBtn.textContent = '다른 게임 🎮';
+            }
+
+            createConfetti();
+        }
+
+        function retryGame() {
+            showScreen('game-screen');
+            startGame(currentGame, currentLevel);
+        }
+
+        // ===== 텍스트 블록 지정 게임 =====
+        // 초등학생용 사자성어 20개, 타겟 1~7글자 골고루 구성
+        // sentence 안에 target이 반드시 포함됨을 검증한 데이터
+        const SELECT_SENTENCES = [
+            // 1글자 타겟
+            {
+                sentence: '일석이조 돌 하나로 새 둘을 잡아요',
+                target: '둘',
+                meaning: '한 번에 두 가지 이득을 얻는다는 뜻이에요'
+            },
+            {
+                sentence: '형설지공 반딧불 형과 눈빛으로 공부해요',
+                target: '형',
+                meaning: '어려운 환경에서도 꾸준히 공부하는 것을 뜻해요'
+            },
+            // 2글자 타겟
+            {
+                sentence: '고진감래 고생 끝에 감래가 반드시 와요',
+                target: '감래',
+                meaning: '고생 끝에 즐거움이 온다는 뜻이에요'
+            },
+            {
+                sentence: '우공이산 우공이 이산을 옮길 만큼 노력해요',
+                target: '이산',
+                meaning: '꾸준한 노력으로 무엇이든 이룰 수 있다는 뜻이에요'
+            },
+            {
+                sentence: '청출어람 제자가 스승보다 더 뛰어나요',
+                target: '제자',
+                meaning: '제자가 스승보다 더 뛰어날 수 있다는 뜻이에요'
+            },
+            // 3글자 타겟
+            {
+                sentence: '백절불굴 백절불 꺾여도 끝까지 일어나요',
+                target: '백절불',
+                meaning: '어떤 어려움에도 굴하지 않는 강한 마음을 뜻해요'
+            },
+            {
+                sentence: '각골난망 각골난망의 은혜를 절대 잊지 않아요',
+                target: '각골난',
+                meaning: '뼛속 깊이 새겨 잊을 수 없는 고마운 은혜를 뜻해요'
+            },
+            {
+                sentence: '동고동락 동고동락하며 함께 기쁨과 슬픔을 나눠요',
+                target: '동고동',
+                meaning: '괴로움도 즐거움도 함께 나눈다는 뜻이에요'
+            },
+            // 4글자 타겟 — 사자성어 전체
+            {
+                sentence: '일취월장 날마다 달마다 일취월장 성장해요',
+                target: '일취월장',
+                meaning: '날이 갈수록 발전하고 성장한다는 뜻이에요'
+            },
+            {
+                sentence: '개과천선 잘못을 뉘우치고 개과천선 해요',
+                target: '개과천선',
+                meaning: '지난 잘못을 고쳐 착한 사람이 된다는 뜻이에요'
+            },
+            {
+                sentence: '대기만성 대기만성이라 크게 될 사람은 늦게 이루어져요',
+                target: '대기만성',
+                meaning: '큰 그릇은 늦게 만들어진다는 뜻이에요'
+            },
+            {
+                sentence: '근묵자흑 근묵자흑처럼 나쁜 환경에 있으면 물들어요',
+                target: '근묵자흑',
+                meaning: '나쁜 친구를 사귀면 나도 나빠질 수 있다는 뜻이에요'
+            },
+            // 5글자 타겟
+            {
+                sentence: '온고지신 옛것을 배워 새것을 알아요',
+                target: '옛것을 배워',
+                meaning: '옛것을 익히고 새것을 안다는 뜻이에요'
+            },
+            {
+                sentence: '절차탁마 갈고 닦아서 훌륭하게 성장해요',
+                target: '갈고 닦아서',
+                meaning: '끊임없이 학문과 덕행을 갈고닦는 것을 뜻해요'
+            },
+            {
+                sentence: '수적천석 물방울이 돌을 뚫어요',
+                target: '물방울이 돌',
+                meaning: '작은 힘도 꾸준히 모이면 큰 것을 이길 수 있어요'
+            },
+            // 6글자 타겟
+            {
+                sentence: '칠전팔기 일곱 번 넘어져도 여덟 번 일어나요',
+                target: '일곱 번 넘어져',
+                meaning: '여러 번 실패해도 포기하지 않고 일어선다는 뜻이에요'
+            },
+            {
+                sentence: '역지사지 상대방 입장에서 생각해봐요',
+                target: '상대방 입장에서',
+                meaning: '처지를 바꾸어 상대방 입장에서 생각한다는 뜻이에요'
+            },
+            // 7글자 타겟
+            {
+                sentence: '마부위침 말을 갈아 바늘을 만들 수 있어요',
+                target: '말을 갈아 바늘을',
+                meaning: '어떤 일이든 끝까지 노력하면 이룰 수 있다는 뜻이에요'
+            },
+            {
+                sentence: '견인불발 굳센 의지로 끝까지 나아가요',
+                target: '굳센 의지로 끝까지',
+                meaning: '굳게 참고 견디어 흔들리지 않는다는 뜻이에요'
+            },
+            {
+                sentence: '지성감천 정성을 다하면 하늘도 감동해요',
+                target: '정성을 다하면 하늘',
+                meaning: '지극한 정성은 하늘도 움직인다는 뜻이에요'
+            },
+        ];
+
+        let selectRound = 0;
+        let selectTotal = 0;
+        let selectCurrentSentence = null;  // 표시용 문장 (공백 포함)
+        let selectCurrentTarget = '';      // 정답 문자열
+        let selectAnswered = false;
+        // 이미 출제된 인덱스 추적 (중복 방지)
+        let selectUsedIdx = [];
+
+        function startSelectGame() {
+            // 레벨 배지
+            const badge = document.getElementById('level-badge');
+            badge.textContent = '✍️ 블록 지정';
+            badge.style.background = '#a18cd1';
+            badge.style.display = 'inline-block';
+
+            selectRound = 0;
+            selectTotal = 6;
+            selectUsedIdx = [];
+
+            // 진행률 표시
+            let progWrap = document.getElementById('select-prog-wrap');
+            if (!progWrap) {
+                progWrap = document.createElement('div');
+                progWrap.id = 'select-prog-wrap';
+                progWrap.className = 'select-progress';
+                progWrap.innerHTML = `<span class="select-progress-text" id="sel-round-text">1 / ${selectTotal}</span>
+                    <div class="select-progress-bar"><div class="select-progress-fill" id="sel-prog-fill" style="width:0%"></div></div>`;
+                document.querySelector('.game-header').appendChild(progWrap);
+            }
+            progWrap.style.display = 'flex';
+
+            loadSelectRound();
+        }
+
+        function loadSelectRound() {
+            const area = document.getElementById('game-area');
+            area.innerHTML = '';
+
+            if (selectRound >= selectTotal) {
+                clearInterval(gameTimer);
+                gameTimer = null;
+                showResult();
+                return;
+            }
+
+            // 진행률 업데이트
+            document.getElementById('sel-round-text').textContent = (selectRound + 1) + ' / ' + selectTotal;
+            document.getElementById('sel-prog-fill').style.width = (selectRound / selectTotal * 100) + '%';
+
+            // 중복 없이 랜덤 문제 선택
+            let idx;
+            do { idx = Math.floor(Math.random() * SELECT_SENTENCES.length); }
+            while (selectUsedIdx.includes(idx) && selectUsedIdx.length < SELECT_SENTENCES.length);
+            selectUsedIdx.push(idx);
+
+            const pick = SELECT_SENTENCES[idx];
+            selectCurrentSentence = pick.sentence;
+            selectCurrentTarget = pick.target;
+            selectAnswered = false;
+
+            const tlen = selectCurrentTarget.length;
+            const levelLabel = tlen === 1 ? '⭐' : tlen <= 3 ? '⭐⭐' : tlen <= 5 ? '⭐⭐⭐' : '⭐⭐⭐⭐';
+
+            const wrap = document.createElement('div');
+            wrap.className = 'select-game-wrap';
+
+            // 미션 박스: 글자 수 힌트 + 뜻 포함
+            const missionBox = document.createElement('div');
+            missionBox.className = 'select-mission-box';
+            missionBox.innerHTML = `
+                <div class="select-mission-label">🎯 아래 문장에서 이 글자를 드래그해서 선택하세요!</div>
+                <div class="select-mission-target">${selectCurrentTarget}</div>
+                <div style="margin-top:6px; color:#aaa; font-size:0.95rem;">${tlen}글자 ${levelLabel}</div>
+                <div style="margin-top:8px; color:#888; font-size:0.95rem; font-style:italic;">💡 ${pick.meaning}</div>`;
+            wrap.appendChild(missionBox);
+
+            // 텍스트 박스 — 글자 단위 span으로 분리 (공백 포함)
+            const textBox = document.createElement('div');
+            textBox.className = 'select-text-box';
+            textBox.id = 'sel-text-box';
+
+            // 타겟 위치 찾기 (첫 번째 등장 위치)
+            const sentence = selectCurrentSentence;
+            const targetStart = sentence.indexOf(selectCurrentTarget);
+            const targetEnd = targetStart + selectCurrentTarget.length;
+
+            // 글자(공백 포함) 하나씩 span으로 감싸기
+            for (let i = 0; i < sentence.length; i++) {
+                const ch = sentence[i];
+                if (ch === ' ') {
+                    // 공백은 텍스트 노드로 — 선택 가능하게 span으로
+                    const sp = document.createElement('span');
+                    sp.dataset.idx = i;
+                    sp.textContent = ' ';
+                    sp.style.display = 'inline';
+                    textBox.appendChild(sp);
+                } else {
+                    const span = document.createElement('span');
+                    span.className = 'word' + (i >= targetStart && i < targetEnd ? ' target-word' : '');
+                    span.dataset.idx = i;
+                    span.textContent = ch;
+                    textBox.appendChild(span);
+                }
+            }
+            wrap.appendChild(textBox);
+
+            // 피드백
+            const feedback = document.createElement('div');
+            feedback.className = 'select-feedback idle';
+            feedback.id = 'sel-feedback';
+            feedback.textContent = '마우스로 드래그해서 글자를 선택해봐요!';
+            feedback.style.color = '#888';
+            feedback.style.background = 'rgba(255,255,255,0.7)';
+            feedback.style.borderRadius = '12px';
+            feedback.style.padding = '8px 24px';
+            wrap.appendChild(feedback);
+
+            area.appendChild(wrap);
+
+            // 이벤트
+            textBox.addEventListener('mouseup', checkTextSelection);
+            textBox.addEventListener('mousedown', () => {
+                textBox.querySelectorAll('span').forEach(s => {
+                    s.classList.remove('selected-correct', 'selected-wrong');
+                });
+            });
+        }
+
+        function checkTextSelection() {
+            if (selectAnswered) return;
+            const sel = window.getSelection();
+            if (!sel || sel.isCollapsed) return;
+
+            const rawSelected = sel.toString();
+
+            // 앞뒤 공백이 있으면 오답 — 정확히 해당 글자만 선택해야 함
+            if (rawSelected !== rawSelected.trim()) {
+                const feedback = document.getElementById('sel-feedback');
+                const target = selectCurrentTarget;
+                feedback.className = 'select-feedback wrong';
+                feedback.textContent = `⚠️ 앞뒤 공백 없이 【${target}】 만 선택해봐요!`;
+                score = Math.max(0, score - 1);
+                updateScore();
+                sel.removeAllRanges();
+                setTimeout(() => {
+                    const fb = document.getElementById('sel-feedback');
+                    if (fb) {
+                        fb.className = 'select-feedback idle';
+                        fb.textContent = '다시 도전해봐요! 💪';
+                        fb.style.color = '#888';
+                        fb.style.background = 'rgba(255,255,255,0.7)';
+                    }
+                }, 900);
+                return;
+            }
+
+            // 단어 사이 연속 공백만 단일 공백으로 정규화해서 비교
+            const normalizeInner = str => str.replace(/\s+/g, ' ');
+
+            const selectedText = normalizeInner(rawSelected);
+            if (!selectedText) return;
+
+            const target = normalizeInner(selectCurrentTarget);
+            const feedback = document.getElementById('sel-feedback');
+            const textBox = document.getElementById('sel-text-box');
+
+            if (selectedText === target) {
+                // 정답
+                selectAnswered = true;
+                const pts = 10 + selectCurrentTarget.replace(/\s+/g, '').length * 5;
+                score += pts;
+                updateScore();
+
+                // 정답 글자 초록색
+                const sentence = selectCurrentSentence;
+                const tStart = sentence.indexOf(selectCurrentTarget);
+                const tEnd = tStart + selectCurrentTarget.length;
+                textBox.querySelectorAll('span').forEach(s => {
+                    const idx = parseInt(s.dataset.idx);
+                    if (idx >= tStart && idx < tEnd) s.classList.add('selected-correct');
+                });
+
+                feedback.className = 'select-feedback correct';
+                feedback.textContent = `🎉 정답! +${pts}점 잘했어요!`;
+
+                showHitParticle(window.innerWidth / 2, window.innerHeight / 2, '🎉');
+                sel.removeAllRanges();
+
+                selectRound++;
+                setTimeout(loadSelectRound, 1200);
+
+            } else {
+                // 오답
+                feedback.className = 'select-feedback wrong';
+                feedback.textContent = `❌ 아니에요! 【${selectCurrentTarget}】 을 찾아봐요!`;
+                score = Math.max(0, score - 3);
+                updateScore();
+
+                // 선택 범위 빨간색 표시 후 초기화
+                const sentence = selectCurrentSentence;
+                const rawSel = sel.toString().trim();
+                const selStart = sentence.indexOf(rawSel);
+                if (selStart >= 0) {
+                    textBox.querySelectorAll('span').forEach(s => {
+                        const idx = parseInt(s.dataset.idx);
+                        if (idx >= selStart && idx < selStart + rawSel.length) {
+                            s.classList.add('selected-wrong');
+                        }
+                    });
+                }
+                sel.removeAllRanges();
+
+                setTimeout(() => {
+                    if (document.getElementById('sel-feedback')) {
+                        document.getElementById('sel-feedback').className = 'select-feedback idle';
+                        document.getElementById('sel-feedback').textContent = '다시 도전해봐요! 💪';
+                        document.getElementById('sel-feedback').style.color = '#888';
+                        document.getElementById('sel-feedback').style.background = 'rgba(255,255,255,0.7)';
+                        textBox.querySelectorAll('span').forEach(s => s.classList.remove('selected-wrong'));
+                    }
+                }, 900);
+            }
+        }
+
+        // ===== 퍼즐 게임 (fairy.png + 곡선 탭 퍼즐) =====
+        // 전역 변수
+
+        // C:\Dev\images 폴더의 이미지 목록 (실제 파일명과 일치해야 함)
+        const PUZZLE_IMAGES = [
+            { name: '코딩 요정 1', src: 'fairy.png'  },
+            { name: '코딩 요정 2', src: 'fairy1.png' },
+        ];
+        let puzzleSelectedSrc  = null;
+        let puzzleSelectedName = '';
+
+        // 이미지 선택 화면 표시
+        function showPuzzleSelectScreen() {
+            showScreen('puzzle-select-screen');
+            puzzleSelectedSrc = null;
+            document.getElementById('btn-start-puzzle').style.display = 'none';
+            const grid = document.getElementById('puzzle-img-grid');
+            grid.innerHTML = '';
+            PUZZLE_IMAGES.forEach((img, idx) => {
+                const card = document.createElement('div');
+                card.className = 'puzzle-img-card';
+                card.dataset.idx = idx;
+                card.innerHTML = `<img src="${img.src}" alt="${img.name}" onerror="this.style.background='#334';this.style.height='140px'">
+                    <div class="card-name">${img.name}</div>`;
+                card.addEventListener('click', () => {
+                    grid.querySelectorAll('.puzzle-img-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    puzzleSelectedSrc  = img.src;
+                    puzzleSelectedName = img.name;
+                    document.getElementById('btn-start-puzzle').style.display = 'inline-block';
+                });
+                grid.appendChild(card);
+            });
+        }
+
+        // 랜덤 선택 후 즉시 시작
+        function puzzleSelectRandom() {
+            const pick = PUZZLE_IMAGES[Math.floor(Math.random() * PUZZLE_IMAGES.length)];
+            puzzleSelectedSrc  = pick.src;
+            puzzleSelectedName = pick.name;
+            startPuzzleGame();
+        }
+
+        // 선택한 이미지로 시작
+        function puzzleStartWithSelected() {
+            if (!puzzleSelectedSrc) return;
+            startPuzzleGame();
+        }
+        let puzzleImg        = null;
+        let puzzlePieces     = [];
+        let puzzlePlacedCount = 0;
+        let puzzleTotalPieces = 10;
+        let puzzleSeconds    = 0;
+        let puzzleTimerInterval = null;
+        let puzzleDragging   = null;
+        let BOARD_W = 0, BOARD_H = 0;
+        const PUZZLE_PAD = 22; // 탭 돌출 여유 픽셀
+
+        // ── 퍼즐 그리드 설정 ──────────────────────────────────────────────
+        const P_COLS = 4, P_ROWS = 3;
+
+        // 내부 경계 탭 방향 랜덤 생성 (게임 시작 시 1회)
+        // hEdge[r][c] = row r 아래 경계의 방향 (+1 볼록 / -1 오목)
+        // vEdge[r][c] = col c 오른쪽 경계의 방향
+        let P_hEdge = [], P_vEdge = [];
+
+        function initEdges() {
+            P_hEdge = []; P_vEdge = [];
+            for (let r = 0; r < P_ROWS - 1; r++) {
+                P_hEdge[r] = [];
+                for (let c = 0; c < P_COLS; c++)
+                    P_hEdge[r][c] = Math.random() > 0.5 ? 1 : -1;
+            }
+            for (let r = 0; r < P_ROWS; r++) {
+                P_vEdge[r] = [];
+                for (let c = 0; c < P_COLS - 1; c++)
+                    P_vEdge[r][c] = Math.random() > 0.5 ? 1 : -1;
+            }
+        }
+
+        // 10조각 레이아웃
+        const P_LAYOUT = [
+            {id:0,col:0,row:0,cw:1,ch:1},{id:1,col:1,row:0,cw:1,ch:1},
+            {id:2,col:2,row:0,cw:1,ch:1},{id:3,col:3,row:0,cw:1,ch:1},
+            {id:4,col:0,row:1,cw:1,ch:1},{id:5,col:1,row:1,cw:1,ch:1},
+            {id:6,col:2,row:1,cw:1,ch:1},{id:7,col:3,row:1,cw:1,ch:1},
+            {id:8,col:0,row:2,cw:2,ch:1},{id:9,col:2,row:2,cw:2,ch:1},
+        ];
+
+        // ── 곡선 탭 그리기 헬퍼 ──────────────────────────────────────────
+        // dir: +1(이 조각 쪽으로 볼록), -1(이 조각 쪽으로 오목)
+        // 수평 이동 (x0→x1, y 고정): 상단/하단 경계
+        function tabH(ctx, x0, y, x1, dir) {
+            const len = x1 - x0;            // 양수=오른쪽, 음수=왼쪽
+            const absl = Math.abs(len);
+            const sign = len > 0 ? 1 : -1;  // 이동 방향
+            const mx   = (x0 + x1) / 2;
+            const ts   = absl * 0.28;        // 탭 폭 반
+            const td   = dir * absl * 0.2;  // 탭 깊이 (y 방향)
+            const t0 = mx - ts * sign;
+            const t1 = mx + ts * sign;
+            ctx.lineTo(t0, y);
+            ctx.bezierCurveTo(t0, y + td * 0.6,  mx - ts * 0.1 * sign, y + td, mx, y + td);
+            ctx.bezierCurveTo(mx + ts * 0.1 * sign, y + td, t1, y + td * 0.6, t1, y);
+            ctx.lineTo(x1, y);
+        }
+
+        // 수직 이동 (y0→y1, x 고정): 우측/좌측 경계
+        function tabV(ctx, x, y0, y1, dir) {
+            const len  = y1 - y0;
+            const absl = Math.abs(len);
+            const sign = len > 0 ? 1 : -1;
+            const my   = (y0 + y1) / 2;
+            const ts   = absl * 0.28;
+            const td   = dir * absl * 0.2;
+            const t0 = my - ts * sign;
+            const t1 = my + ts * sign;
+            ctx.lineTo(x, t0);
+            ctx.bezierCurveTo(x + td * 0.6, t0,  x + td, my - ts * 0.1 * sign, x + td, my);
+            ctx.bezierCurveTo(x + td, my + ts * 0.1 * sign, x + td * 0.6, t1, x, t1);
+            ctx.lineTo(x, y1);
+        }
+
+        // 조각 path — PAD 포함 캔버스 좌표계에서 그림
+        // slotMode=true 면 슬롯용(보드 위 가이드) → 이미지 없이 외곽선만 표시
+        // 경계 규칙:
+        //   상단: row>0 → hEdge[row-1][col]  +1이면 위로 볼록(이웃이 오목)
+        //   하단: bRow<ROWS-1 → hEdge[bRow][col]  +1이면 아래로 볼록
+        //   우측: rCol<COLS-1 → vEdge[row][rCol]  +1이면 오른쪽으로 볼록
+        //   좌측: col>0 → vEdge[row][col-1]  +1이면 왼쪽으로 볼록
+        // 슬롯은 조각과 동일한 path를 사용해야 완전히 일치함
+        function drawPuzzlePiecePath(ctx, d, cw, ch) {
+            const ox = PUZZLE_PAD, oy = PUZZLE_PAD;
+            const pw = d.cw * cw, ph = d.ch * ch;
+            const x0 = ox, y0 = oy, x1 = ox + pw, y1 = oy + ph;
+            const { col, row } = d;
+            const sc = d.cw, sr = d.ch; // span
+            const rCol = col + sc - 1;
+            const bRow = row + sr - 1;
+
+            ctx.beginPath();
+            ctx.moveTo(x0, y0);
+
+            // ── 상단 (x0→x1, y0 고정) ──
+            if (row === 0) {
+                ctx.lineTo(x1, y0);
+            } else {
+                // hEdge[row-1][col]: +1이면 위(y감소)쪽으로 볼록 → dir=-1 (y감소 방향)
+                tabH(ctx, x0, y0, x1, -P_hEdge[row-1][col]);
+            }
+
+            // ── 우측 (y0→y1, x1 고정) ──
+            if (rCol === P_COLS - 1) {
+                ctx.lineTo(x1, y1);
+            } else {
+                // vEdge[row][rCol]: +1이면 오른쪽(x증가)으로 볼록 → dir=+1
+                tabV(ctx, x1, y0, y1, P_vEdge[row][rCol]);
+            }
+
+            // ── 하단 (x1→x0, y1 고정, 역방향) ──
+            if (bRow === P_ROWS - 1) {
+                ctx.lineTo(x0, y1);
+            } else {
+                // hEdge[bRow][col]: +1이면 아래(y증가)로 볼록 → 역방향이므로 dir=+1
+                tabH(ctx, x1, y1, x0, P_hEdge[bRow][col]);
+            }
+
+            // ── 좌측 (y1→y0, x0 고정, 역방향) ──
+            if (col === 0) {
+                ctx.lineTo(x0, y0);
+            } else {
+                // vEdge[row][col-1]: +1이면 오른쪽 볼록 → 이 조각 좌측엔 오목 → dir=-1, 역방향
+                tabV(ctx, x0, y1, y0, -P_vEdge[row][col-1]);
+            }
+
+            ctx.closePath();
+        }
+
+        function buildPieceDefs(bw, bh) {
+            const cw = bw / P_COLS, ch = bh / P_ROWS;
+            return P_LAYOUT.map(d => ({
+                ...d,
+                px: d.col * cw, py: d.row * ch,
+                pw: d.cw  * cw, ph: d.ch  * ch,
+                _cw: cw, _ch: ch,
+            }));
+        }
+
+        function startPuzzleGame() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('puzzle-screen').classList.add('active');
+
+            initEdges(); // 경계 방향 새로 랜덤 생성
+            puzzlePlacedCount = 0;
+            puzzleSeconds     = 0;
+            puzzlePieces      = [];
+            puzzleDragging    = null;
+            document.getElementById('puzzle-info').textContent  = '🧩 0 / 10 완성';
+            document.getElementById('puzzle-timer').textContent = '⏰ 0초';
+
+            clearInterval(puzzleTimerInterval);
+            puzzleTimerInterval = setInterval(() => {
+                puzzleSeconds++;
+                document.getElementById('puzzle-timer').textContent = '⏰ ' + puzzleSeconds + '초';
+            }, 1000);
+
+            // 이미지: 업로드 이미지 > 선택된 이미지 > 첫 번째 이미지 > Canvas 폴백
+            const src = uploadedImageURL || puzzleSelectedSrc || PUZZLE_IMAGES[0].src;
+            const nameLabel = document.getElementById('puzzle-img-name');
+            if (nameLabel) nameLabel.textContent = puzzleSelectedName || PUZZLE_IMAGES[0].name;
+            puzzleImg = new Image();
+            puzzleImg.onload = () => initPuzzleBoard();
+            puzzleImg.onerror = () => {
+                puzzleImg = makePuzzleFallback();
+                setTimeout(() => initPuzzleBoard(), 30);
+            };
+            puzzleImg.src = src;
+        }
+
+        function makePuzzleFallback() {
+            const W = 512, H = 512, c = document.createElement('canvas');
+            c.width = W; c.height = H;
+            const ctx = c.getContext('2d');
+            const bg = ctx.createRadialGradient(W/2,H*0.4,20,W/2,H/2,H*0.7);
+            bg.addColorStop(0,'#2dd4bf'); bg.addColorStop(0.5,'#0891b2'); bg.addColorStop(1,'#134e4a');
+            ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+            ctx.font='180px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+            ctx.fillText('🧚',W/2,H*0.42);
+            ctx.font='bold 40px sans-serif'; ctx.fillStyle='#FFD700';
+            ctx.fillText('퍼즐을 맞춰봐요 🧩',W/2,H*0.83);
+            const img = new Image(); img.src = c.toDataURL('image/png'); return img;
+        }
+
+        function initPuzzleBoard() {
+            const board = document.getElementById('puzzle-board');
+            const tray  = document.getElementById('puzzle-tray');
+
+            while (tray.children.length > 1) tray.removeChild(tray.lastChild);
+            board.innerHTML = '';
+
+            // 보드 크기 계산
+            const bodyEl = document.querySelector('.puzzle-body');
+            const availH = bodyEl.clientHeight - 50;
+            const availW = bodyEl.clientWidth  - 250;
+            const ratio  = puzzleImg.naturalWidth / puzzleImg.naturalHeight;
+            let bh = Math.min(availH, 460);
+            let bw = Math.round(bh * ratio);
+            if (bw > availW) { bw = availW; bh = Math.round(bw / ratio); }
+            BOARD_W = bw; BOARD_H = bh;
+            board.style.width  = bw + 'px';
+            board.style.height = bh + 'px';
+
+            const defs = buildPieceDefs(bw, bh);
+            puzzleTotalPieces = defs.length;
+            document.getElementById('puzzle-info').textContent = '🧩 0 / ' + puzzleTotalPieces + ' 완성';
+
+            const scaleX = puzzleImg.naturalWidth  / bw;
+            const scaleY = puzzleImg.naturalHeight / bh;
+
+            defs.forEach(d => {
+                const canW = d.pw + PUZZLE_PAD * 2;
+                const canH = d.ph + PUZZLE_PAD * 2;
+
+                // ── 슬롯 가이드 캔버스 ──────────────────────────────────
+                // 조각과 완전히 동일한 path로 그려야 위치가 일치함
+                const slotCanvas = document.createElement('canvas');
+                slotCanvas.width  = canW; slotCanvas.height = canH;
+                slotCanvas.style.cssText =
+                    `position:absolute;left:${d.px - PUZZLE_PAD}px;top:${d.py - PUZZLE_PAD}px;` +
+                    `width:${canW}px;height:${canH}px;pointer-events:none;z-index:1;`;
+                slotCanvas.dataset.pieceId = d.id;
+                slotCanvas.className = 'puzzle-slot';
+                const sc = slotCanvas.getContext('2d');
+                // 반투명 채우기로 슬롯 위치 표시
+                drawPuzzlePiecePath(sc, d, d._cw, d._ch);
+                sc.fillStyle   = 'rgba(255,255,255,0.06)';
+                sc.fill();
+                drawPuzzlePiecePath(sc, d, d._cw, d._ch);
+                sc.strokeStyle = 'rgba(255,255,255,0.3)';
+                sc.lineWidth   = 1.5;
+                sc.setLineDash([5,4]);
+                sc.stroke();
+                board.appendChild(slotCanvas);
+
+                // ── 조각 캔버스 ──────────────────────────────────────────
+                const canvas = document.createElement('canvas');
+                canvas.width  = canW; canvas.height = canH;
+                const ctx = canvas.getContext('2d');
+
+                // 1) path 클리핑
+                drawPuzzlePiecePath(ctx, d, d._cw, d._ch);
+                ctx.save(); ctx.clip();
+
+                // 2) 이미지 그리기
+                // 캔버스 (0,0) = 보드의 (d.px - PUZZLE_PAD, d.py - PUZZLE_PAD) 위치
+                // 따라서 drawImage 소스 좌표 = 이미지 픽셀 단위로 변환
+                ctx.drawImage(
+                    puzzleImg,
+                    (d.px - PUZZLE_PAD) * scaleX,   // 소스 x
+                    (d.py - PUZZLE_PAD) * scaleY,   // 소스 y
+                    canW * scaleX,                  // 소스 너비
+                    canH * scaleY,                  // 소스 높이
+                    0, 0, canW, canH                // 대상 (전체 캔버스)
+                );
+                ctx.restore();
+
+                // 3) 입체감 테두리
+                drawPuzzlePiecePath(ctx, d, d._cw, d._ch);
+                ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+                ctx.lineWidth   = 2;
+                ctx.stroke();
+                drawPuzzlePiecePath(ctx, d, d._cw, d._ch);
+                ctx.strokeStyle = 'rgba(0,0,0,0.35)';
+                ctx.lineWidth   = 1;
+                ctx.stroke();
+
+                // 조각 wrapper div
+                const piece = document.createElement('div');
+                piece.className = 'puzzle-piece in-tray';
+                piece.dataset.pieceId = d.id;
+                piece.dataset.placed  = 'false';
+                piece.style.width  = canW + 'px';
+                piece.style.height = canH + 'px';
+                piece.appendChild(canvas);
+
+                // 트레이 내부 폭(200px - padding 16px = 184px)에 맞춰 축소 비율 계산
+                const TRAY_INNER = 184;
+                const thumbScale = Math.min(1, TRAY_INNER / canW);
+                piece.dataset.thumbScale = thumbScale;
+                // CSS transform으로 축소 표시 + 실제 DOM 공간도 줄이기
+                piece.style.transform       = `scale(${thumbScale})`;
+                piece.style.transformOrigin = 'top left';
+                // 축소된 실제 점유 크기를 margin-bottom 으로 보정
+                const scaledH = canH * thumbScale;
+                piece.style.marginBottom = (scaledH - canH) + 'px'; // 음수값으로 공간 줄임
+
+                piece.addEventListener('mousedown', puzzleOnMouseDown);
+
+                tray.appendChild(piece);
+                puzzlePieces.push({ id: d.id, el: piece, def: d, placed: false });
+            });
+
+            const pieceEls = Array.from(tray.querySelectorAll('.puzzle-piece'));
+            pieceEls.sort(() => Math.random() - 0.5);
+            pieceEls.forEach(el => tray.appendChild(el));
+
+            document.addEventListener('mousemove', puzzleOnMouseMove);
+            document.addEventListener('mouseup',   puzzleOnMouseUp);
+        }
+
+        function puzzleOnMouseDown(e) {
+            e.preventDefault();
+            const el = e.currentTarget;
+            if (el.dataset.placed === 'true') return;
+
+            // 드래그 전 현재 화면 위치 (축소된 상태의 rect)
+            const rect = el.getBoundingClientRect();
+
+            // scale 제거 → 원본 크기로 복원
+            el.style.transform       = 'none';
+            el.style.transformOrigin = '';
+            el.style.marginBottom    = '';
+
+            el.classList.remove('in-tray');
+            el.classList.add('dragging');
+
+            // 원본 크기 복원 후 중심 맞춤 (클릭 위치 비율 유지)
+            const canW = parseFloat(el.style.width);
+            const canH = parseFloat(el.style.height);
+            const thumbScale = parseFloat(el.dataset.thumbScale) || 1;
+
+            // 클릭 위치 → 원본 기준 offset
+            const clickRatioX = (e.clientX - rect.left) / rect.width;
+            const clickRatioY = (e.clientY - rect.top)  / rect.height;
+            const offsetX = clickRatioX * canW;
+            const offsetY = clickRatioY * canH;
+
+            el.style.position = 'fixed';
+            el.style.zIndex   = '1000';
+            el.style.margin   = '0';
+            el.style.left     = (e.clientX - offsetX) + 'px';
+            el.style.top      = (e.clientY - offsetY) + 'px';
+            document.body.appendChild(el);
+
+            const id  = parseInt(el.dataset.pieceId);
+            const def = puzzlePieces.find(p => p.id === id).def;
+            puzzleDragging = { el, id, def, offsetX, offsetY };
+        }
+
+        function puzzleOnMouseMove(e) {
+            if (!puzzleDragging) return;
+            const { el, offsetX, offsetY } = puzzleDragging;
+            el.style.left = (e.clientX - offsetX) + 'px';
+            el.style.top  = (e.clientY - offsetY) + 'px';
+        }
+
+        function puzzleOnMouseUp(e) {
+            if (!puzzleDragging) return;
+            const { el, id, def, offsetX, offsetY } = puzzleDragging;
+            puzzleDragging = null;
+
+            const board     = document.getElementById('puzzle-board');
+            const boardRect = board.getBoundingClientRect();
+            const tray      = document.getElementById('puzzle-tray');
+
+            // 조각의 정답 좌상단이 보드 기준 어디에 떨어졌는지 계산
+            // 조각 캔버스의 (0,0) = 보드의 (def.px - PAD, def.py - PAD)
+            // e.clientX - offsetX = 조각 캔버스 좌상단의 viewport x
+            // → 보드 기준 조각 캔버스 좌상단 x = (e.clientX-offsetX) - boardRect.left
+            // → 이미지 원점(PAD 제거 후) = 위 값 + PUZZLE_PAD
+            const dropPx = (e.clientX - offsetX - boardRect.left) + PUZZLE_PAD;
+            const dropPy = (e.clientY - offsetY - boardRect.top)  + PUZZLE_PAD;
+
+            const SNAP = Math.min(def.pw, def.ph) * 0.4;
+            const dx = Math.abs(dropPx - def.px);
+            const dy = Math.abs(dropPy - def.py);
+
+            el.classList.remove('dragging');
+            el.style.position=''; el.style.zIndex=''; el.style.left='';
+            el.style.top=''; el.style.margin='';
+
+            const inBoard = dropPx + def.pw > 0 && dropPx < BOARD_W &&
+                            dropPy + def.ph > 0 && dropPy < BOARD_H;
+
+            if (dx < SNAP && dy < SNAP) {
+                // ✅ 정답 스냅 — 캔버스 좌상단 = (def.px - PAD, def.py - PAD)
+                el.classList.add('placed'); el.classList.remove('in-tray');
+                el.style.position = 'absolute';
+                el.style.left     = (def.px - PUZZLE_PAD) + 'px';
+                el.style.top      = (def.py - PUZZLE_PAD) + 'px';
+                el.style.zIndex   = '5';
+                el.dataset.placed = 'true';
+                board.appendChild(el);
+
+                const slot = board.querySelector(`.puzzle-slot[data-piece-id="${id}"]`);
+                if (slot) slot.classList.add('matched');
+
+                puzzlePlacedCount++;
+                document.getElementById('puzzle-info').textContent =
+                    '🧩 ' + puzzlePlacedCount + ' / ' + puzzleTotalPieces + ' 완성';
+                showHitParticle(
+                    boardRect.left + def.px + def.pw/2,
+                    boardRect.top  + def.py + def.ph/2, '✨');
+
+                if (puzzlePlacedCount >= puzzleTotalPieces) {
+                    clearInterval(puzzleTimerInterval);
+                    setTimeout(() => puzzleShowComplete(), 400);
+                }
+            } else if (inBoard) {
+                // 보드 위 자유 이동 — scale 없는 원본 크기
+                el.classList.remove('in-tray');
+                el.style.transform       = 'none';
+                el.style.transformOrigin = '';
+                el.style.marginBottom    = '';
+                el.style.position = 'absolute';
+                el.style.left     = (e.clientX - offsetX - boardRect.left) + 'px';
+                el.style.top      = (e.clientY - offsetY - boardRect.top)  + 'px';
+                el.style.zIndex   = '10';
+                board.appendChild(el);
+            } else {
+                // 트레이로 복귀 → 썸네일 scale 재적용
+                el.classList.add('in-tray');
+                el.style.position = '';
+                el.style.left     = '';
+                el.style.top      = '';
+                el.style.zIndex   = '';
+                const thumbScale = parseFloat(el.dataset.thumbScale) || 1;
+                const canH = parseFloat(el.style.height);
+                el.style.transform       = `scale(${thumbScale})`;
+                el.style.transformOrigin = 'top left';
+                el.style.marginBottom    = (canH * thumbScale - canH) + 'px';
+                tray.appendChild(el);
+            }
+        }
+
+        function puzzleShowComplete() {
+            const board = document.getElementById('puzzle-board');
+            // 슬롯 가이드 모두 숨기기 → 조각만 남아 원본 이미지처럼 보임
+            board.querySelectorAll('.puzzle-slot').forEach(s => { s.style.opacity = '0'; });
+
+            const ov = document.createElement('div');
+            ov.className = 'puzzle-complete-overlay';
+            ov.innerHTML = `<h3>🎉 완성!</h3>
+                <p>⏰ ${puzzleSeconds}초 만에 맞췄어요!</p>
+                <p style="margin-top:6px;font-size:1rem;color:#aef;">${puzzleSelectedName}</p>
+                <p style="margin-top:10px;font-size:0.95rem;color:#ccc;">클릭하면 다른 이미지 선택</p>`;
+            ov.addEventListener('click', () => endPuzzleGame());
+            board.appendChild(ov);
+            createConfetti();
+        }
+
+        function endPuzzleGame() {
+            clearInterval(puzzleTimerInterval);
+            document.removeEventListener('mousemove', puzzleOnMouseMove);
+            document.removeEventListener('mouseup',   puzzleOnMouseUp);
+            puzzleDragging = null;
+            showPuzzleSelectScreen();
+        }
+
+
+        // 축하 효과
+        function createConfetti() {
+            const emojis = ['🎉', '🎊', '⭐', '🌟', '💖', '🎈', '🎀'];
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const conf = document.createElement('div');
+                    conf.className = 'confetti';
+                    conf.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    conf.style.left = Math.random() * 100 + 'vw';
+                    conf.style.animationDuration = (2 + Math.random() * 2) + 's';
+                    document.body.appendChild(conf);
+                    setTimeout(() => conf.remove(), 4000);
+                }, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>
