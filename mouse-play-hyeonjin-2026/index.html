@@ -31,7 +31,7 @@
         <div class="hero-copy">
           <div class="eyebrow"><span>✨</span> 초등 1·2학년을 위한 첫 컴퓨터 놀이</div>
           <h1>작은 손으로<br><strong>큰 모험을 시작해요!</strong></h1>
-          <p>마우스를 움직이고, 콕 누르고, 쏙 옮겨봐요.<br>네 가지 놀이를 끝내면 마우스 박사가 될 수 있어요!</p>
+          <p>마우스를 움직이고, 콕 누르고, 쏙 옮겨봐요.<br>키보드와 마우스를 함께 쓰는 새로운 도전도 있어요!</p>
           <button class="primary-btn" id="start-first" type="button">🚀 첫 번째 놀이 시작 <span aria-hidden="true">→</span></button>
           <div class="hero-tags"><span>🎮 게임처럼 신나게</span><span>🧡 천천히 해도 괜찮아</span></div>
         </div>
@@ -48,7 +48,7 @@
 
       <div class="section-heading">
         <div><span class="small-label">MY ADVENTURE</span><h2>오늘의 마우스 미션 <span class="heading-sparkle">✦</span></h2></div>
-        <div class="total-progress" aria-live="polite"><span>모은 별</span><strong id="total-stars">⭐ 0 / 12</strong></div>
+        <div class="total-progress" aria-live="polite"><span>모은 별</span><strong id="total-stars">⭐ 0 / 27</strong></div>
       </div>
 
       <div class="game-grid">
@@ -77,6 +77,43 @@
           <span class="card-check" data-check="balloon" aria-hidden="true">✓ 완료</span>
         </button>
       </div>
+      <div class="section-heading keyboard-heading">
+        <div><span class="small-label">KEYBOARD + MOUSE</span><h2>⌨️ 키보드와 마우스 함께 쓰기 <span class="heading-sparkle">✦</span></h2></div>
+        <span class="keyboard-section-badge">새로운 5가지 도전!</span>
+      </div>
+      <p class="keyboard-intro">한 손으로 키보드를 <strong>꾹 누르고</strong>, 다른 손으로 별을 <strong>클릭!</strong> 노란색 키가 어디 있는지 찾아봐요.</p>
+      <div class="keyboard-grid">
+        <button type="button" class="game-card key-card key-shift" data-game="shift">
+          <span class="card-step">05 · 키보드 연습</span><span class="card-picture key-picture"><kbd>Shift</kbd></span>
+          <span class="card-title">Shift + 클릭</span><span class="card-subtitle">쉬프트 키를 누르고 클릭해요</span>
+          <span class="card-bottom"><span class="skill-pill">⬆️ Shift</span><span class="card-go">→</span></span>
+          <span class="card-check" aria-hidden="true">✓ 완료</span>
+        </button>
+        <button type="button" class="game-card key-card key-alt" data-game="alt">
+          <span class="card-step">06 · 키보드 연습</span><span class="card-picture key-picture"><kbd>Alt</kbd></span>
+          <span class="card-title">Alt + 클릭</span><span class="card-subtitle">알트 키를 누르고 클릭해요</span>
+          <span class="card-bottom"><span class="skill-pill">🎹 Alt</span><span class="card-go">→</span></span>
+          <span class="card-check" aria-hidden="true">✓ 완료</span>
+        </button>
+        <button type="button" class="game-card key-card key-ctrl" data-game="ctrl">
+          <span class="card-step">07 · 키보드 연습</span><span class="card-picture key-picture"><kbd>Ctrl</kbd></span>
+          <span class="card-title">Ctrl + 클릭</span><span class="card-subtitle">컨트롤 키를 누르고 클릭해요</span>
+          <span class="card-bottom"><span class="skill-pill">🎹 Ctrl</span><span class="card-go">→</span></span>
+          <span class="card-check" aria-hidden="true">✓ 완료</span>
+        </button>
+        <button type="button" class="game-card key-card key-space" data-game="space">
+          <span class="card-step">08 · 키보드 연습</span><span class="card-picture key-picture"><kbd class="wide-keycap">Space</kbd></span>
+          <span class="card-title">Space + 클릭</span><span class="card-subtitle">긴 스페이스바를 눌러요</span>
+          <span class="card-bottom"><span class="skill-pill">▭ Space</span><span class="card-go">→</span></span>
+          <span class="card-check" aria-hidden="true">✓ 완료</span>
+        </button>
+        <button type="button" class="game-card key-card key-enter" data-game="enter">
+          <span class="card-step">09 · 키보드 연습</span><span class="card-picture key-picture"><kbd>↵ Enter</kbd></span>
+          <span class="card-title">Enter + 클릭</span><span class="card-subtitle">엔터 키를 누르고 클릭해요</span>
+          <span class="card-bottom"><span class="skill-pill">↵ Enter</span><span class="card-go">→</span></span>
+          <span class="card-check" aria-hidden="true">✓ 완료</span>
+        </button>
+      </div>
       <p class="bottom-note">🌼 틀려도 괜찮아요! 시간제한도, 점수 깎기도 없어요.</p>
     </section>
 
@@ -85,7 +122,7 @@
       <div class="game-panel">
         <div class="game-heading"><div class="game-heading-icon" id="game-icon">⭐</div><div><span id="game-skill" class="small-label">한 번 클릭 연습</span><h2 id="game-title">별을 콕콕!</h2><p id="game-instruction">별을 마우스로 눌러보세요.</p></div></div>
         <div class="progress-row"><span id="progress-label">0 / 8 성공</span><div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" id="progress-bar"><div id="progress-fill"></div></div><span class="progress-star">⭐ <span id="progress-stars">0</span></span></div>
-        <div id="game-board" class="game-board" aria-label="놀이 공간"></div>
+        <div id="game-board" class="game-board" aria-label="놀이 공간" tabindex="-1"></div>
         <div class="below-board"><p id="game-tip" class="game-tip">💡 마우스 화살표를 별 위에 올려보세요.</p><button id="retry-btn" type="button" class="retry-btn">↻ 다시 하기</button></div>
       </div>
     </section>
@@ -98,7 +135,7 @@
   </div>
 
   <div id="help-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="help-title">
-    <div class="modal-card help-card"><button type="button" class="modal-x" id="close-help" aria-label="도움말 닫기">×</button><div class="help-emoji">👩‍🏫</div><h2 id="help-title">선생님을 위한 사용 안내</h2><ul><li>회원가입이나 로그인 없이 네 가지 게임을 바로 시작할 수 있어요.</li><li><strong>클릭:</strong> 왼쪽 버튼을 한 번 누르기</li><li><strong>더블클릭:</strong> 같은 선물 상자를 빠르게 두 번 누르기</li><li><strong>드래그:</strong> 간식을 꾹 누르고 로봇의 입으로 옮긴 뒤 놓기</li><li><strong>풍선:</strong> 움직이는 풍선을 클릭해 터뜨리기</li><li>시간제한과 실패 감점이 없으며, 진행 결과는 서버에 저장하지 않아요.</li></ul><button id="help-okay" class="primary-btn" type="button">알겠어요! 👍</button></div>
+    <div class="modal-card help-card"><button type="button" class="modal-x" id="close-help" aria-label="도움말 닫기">×</button><div class="help-emoji">👩‍🏫</div><h2 id="help-title">선생님을 위한 사용 안내</h2><ul><li>로그인 없이 기본 4가지와 키보드 조합 5가지, 총 9개 게임을 이용할 수 있어요.</li><li><strong>클릭:</strong> 왼쪽 버튼을 한 번 누르기</li><li><strong>더블클릭:</strong> 같은 선물 상자를 빠르게 두 번 누르기</li><li><strong>드래그:</strong> 간식을 꾹 누르고 로봇의 입으로 옮긴 뒤 놓기</li><li><strong>풍선:</strong> 움직이는 풍선을 클릭해 터뜨리기</li><li><strong>키보드 + 마우스:</strong> 지정된 키를 한 손으로 누른 채 다른 손으로 별을 클릭해요. 화면의 노란 키가 위치를 알려줍니다.</li><li>Space·Enter + 클릭은 두 입력을 함께 사용하는 연습용 미션입니다. 일반적인 컴퓨터 단축키라는 뜻은 아니에요.</li><li>시간제한과 실패 감점이 없으며, 진행 결과는 서버에 저장하지 않아요.</li></ul><button id="help-okay" class="primary-btn" type="button">알겠어요! 👍</button></div>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
