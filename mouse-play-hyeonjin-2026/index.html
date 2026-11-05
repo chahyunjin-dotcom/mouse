@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff8ed">
+  <meta name="description" content="클릭, 더블클릭, 드래그, 풍선 터뜨리기를 재미있게 연습하는 초등 1·2학년용 무료 한글 마우스 놀이터. 로그인 없이 바로 시작해요.">
+  <title>반짝반짝 마우스 놀이터 · 초등 1·2학년</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./game.js" defer></script>
+</head>
+<body>
+  <div class="sky-decor cloud cloud-a" aria-hidden="true"></div>
+  <div class="sky-decor cloud cloud-b" aria-hidden="true"></div>
+
+  <header class="topbar wrap">
+    <button class="brand" id="brand-home" type="button" aria-label="처음 화면으로">
+      <span class="brand-icon">✳</span>
+      <span>마우스 놀이터<small>반짝반짝 손끝 모험</small></span>
+    </button>
+    <div class="top-actions">
+      <span class="no-login">✓ 로그인 필요 없어요</span>
+      <button id="sound-btn" class="tiny-button" type="button" aria-label="소리 끄기" title="소리 켜기 또는 끄기">🔊</button>
+      <button id="help-btn" class="tiny-button help-btn" type="button" aria-label="선생님 도움말 열기">?</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="home" class="home-screen" aria-label="마우스 연습 선택">
+      <div class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span>✨</span> 초등 1·2학년을 위한 첫 컴퓨터 놀이</div>
+          <h1>작은 손으로<br><strong>큰 모험을 시작해요!</strong></h1>
+          <p>마우스를 움직이고, 콕 누르고, 쏙 옮겨봐요.<br>네 가지 놀이를 끝내면 마우스 박사가 될 수 있어요!</p>
+          <button class="primary-btn" id="start-first" type="button">🚀 첫 번째 놀이 시작 <span aria-hidden="true">→</span></button>
+          <div class="hero-tags"><span>🎮 게임처럼 신나게</span><span>🧡 천천히 해도 괜찮아</span></div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-sun">☀</div>
+          <div class="orbit orbit-one">★</div>
+          <div class="orbit orbit-two">♥</div>
+          <div class="orbit orbit-three">✦</div>
+          <div class="mascot"><div class="mouse-ears"><i></i><i></i></div><div class="mouse-body"><div class="mascot-eyes"><i></i><i></i></div><div class="mascot-nose"></div><div class="mascot-smile"></div></div><div class="mouse-tail"></div></div>
+          <div class="art-shadow"></div>
+          <div class="art-caption">안녕! 같이 놀자 🐭</div>
+        </div>
+      </div>
+
+      <div class="section-heading">
+        <div><span class="small-label">MY ADVENTURE</span><h2>오늘의 마우스 미션 <span class="heading-sparkle">✦</span></h2></div>
+        <div class="total-progress" aria-live="polite"><span>모은 별</span><strong id="total-stars">⭐ 0 / 12</strong></div>
+      </div>
+
+      <div class="game-grid">
+        <button type="button" class="game-card yellow" data-game="click">
+          <span class="card-step">01 · 첫 번째 놀이</span><span class="card-picture picture-star">⭐</span>
+          <span class="card-title">별을 콕콕!</span><span class="card-subtitle">마우스로 별을 찾아 클릭해요</span>
+          <span class="card-bottom"><span class="skill-pill">☝️ 한 번 클릭</span><span class="card-go">→</span></span>
+          <span class="card-check" data-check="click" aria-hidden="true">✓ 완료</span>
+        </button>
+        <button type="button" class="game-card lilac" data-game="double">
+          <span class="card-step">02 · 두 번째 놀이</span><span class="card-picture picture-gift">🎁</span>
+          <span class="card-title">선물 상자 톡톡!</span><span class="card-subtitle">빠르게 두 번 눌러 열어봐요</span>
+          <span class="card-bottom"><span class="skill-pill">✌️ 더블클릭</span><span class="card-go">→</span></span>
+          <span class="card-check" data-check="double" aria-hidden="true">✓ 완료</span>
+        </button>
+        <button type="button" class="game-card mint" data-game="drag">
+          <span class="card-step">03 · 세 번째 놀이</span><span class="card-picture picture-robot">🤖</span>
+          <span class="card-title">로봇 간식 배달!</span><span class="card-subtitle">꾹 누른 채 간식을 옮겨요</span>
+          <span class="card-bottom"><span class="skill-pill">🖐️ 드래그</span><span class="card-go">→</span></span>
+          <span class="card-check" data-check="drag" aria-hidden="true">✓ 완료</span>
+        </button>
+        <button type="button" class="game-card peach" data-game="balloon">
+          <span class="card-step">04 · 네 번째 놀이</span><span class="card-picture picture-balloon">🎈</span>
+          <span class="card-title">풍선 팡팡!</span><span class="card-subtitle">알록달록 풍선을 터뜨려요</span>
+          <span class="card-bottom"><span class="skill-pill">🎯 클릭 게임</span><span class="card-go">→</span></span>
+          <span class="card-check" data-check="balloon" aria-hidden="true">✓ 완료</span>
+        </button>
+      </div>
+      <p class="bottom-note">🌼 틀려도 괜찮아요! 시간제한도, 점수 깎기도 없어요.</p>
+    </section>
+
+    <section id="play" class="play-screen hidden" aria-label="마우스 놀이" aria-live="off">
+      <div class="play-toolbar"><button class="back-btn" id="back-home" type="button">← 놀이 선택</button><span id="play-count" class="level-number">첫 번째 놀이</span></div>
+      <div class="game-panel">
+        <div class="game-heading"><div class="game-heading-icon" id="game-icon">⭐</div><div><span id="game-skill" class="small-label">한 번 클릭 연습</span><h2 id="game-title">별을 콕콕!</h2><p id="game-instruction">별을 마우스로 눌러보세요.</p></div></div>
+        <div class="progress-row"><span id="progress-label">0 / 8 성공</span><div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" id="progress-bar"><div id="progress-fill"></div></div><span class="progress-star">⭐ <span id="progress-stars">0</span></span></div>
+        <div id="game-board" class="game-board" aria-label="놀이 공간"></div>
+        <div class="below-board"><p id="game-tip" class="game-tip">💡 마우스 화살표를 별 위에 올려보세요.</p><button id="retry-btn" type="button" class="retry-btn">↻ 다시 하기</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap footer"><span>🐭 반짝반짝 마우스 놀이터</span><span>로그인 · 광고 · 설치 없이 즐기는 어린이 연습 게임</span></footer>
+
+  <div id="success-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="success-title">
+    <div class="modal-card celebration"><div class="trophy" id="success-emoji">🏆</div><div class="mini-stars">⭐ ⭐ ⭐</div><h2 id="success-title">참 잘했어요!</h2><p id="success-text">연습을 멋지게 끝냈어요.</p><div class="modal-buttons"><button type="button" id="next-game" class="primary-btn">다음 놀이 하기 →</button><button type="button" id="to-home" class="secondary-btn">놀이 선택으로</button></div></div>
+  </div>
+
+  <div id="help-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="modal-card help-card"><button type="button" class="modal-x" id="close-help" aria-label="도움말 닫기">×</button><div class="help-emoji">👩‍🏫</div><h2 id="help-title">선생님을 위한 사용 안내</h2><ul><li>회원가입이나 로그인 없이 네 가지 게임을 바로 시작할 수 있어요.</li><li><strong>클릭:</strong> 왼쪽 버튼을 한 번 누르기</li><li><strong>더블클릭:</strong> 같은 선물 상자를 빠르게 두 번 누르기</li><li><strong>드래그:</strong> 간식을 꾹 누르고 로봇의 입으로 옮긴 뒤 놓기</li><li><strong>풍선:</strong> 움직이는 풍선을 클릭해 터뜨리기</li><li>시간제한과 실패 감점이 없으며, 진행 결과는 서버에 저장하지 않아요.</li></ul><button id="help-okay" class="primary-btn" type="button">알겠어요! 👍</button></div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
