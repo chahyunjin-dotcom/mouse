@@ -35,6 +35,9 @@
 .word-list-heading h2 { font: 23px 'Jua','Noto Sans KR',sans-serif; margin: 0; }
 .word-list-heading p { color: #8a94a0; font-size: 11px; margin: 5px 0 0; font-weight: 700; }
 .word-list-count { white-space: nowrap; font-weight: 900; font-size: 12px; color: #5aaf94; background: #eaf8f0; padding: 9px 13px; border-radius: 30px; }
+.word-list-actions { display: flex; align-items: center; justify-content: flex-end; gap: 9px; flex-wrap: wrap; }
+.reroll-button { border: 1.5px solid #f0c87f; background: #fff5d9; color: #98621e; font-weight: 900; font-size: 12px; padding: 9px 13px; border-radius: 30px; white-space: nowrap; transition: transform .15s,background .15s; }
+.reroll-button:hover { background: #ffebbb; transform: translateY(-2px); }
 .word-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; }
 .word-chip {
   display: flex; align-items: center; gap: 8px; min-width: 0;
@@ -65,6 +68,9 @@
   .word-list-heading h2 { font-size: 20px; }
   .word-list-heading p { font-size: 10px; }
   .word-list-count { font-size: 10px; padding: 7px 9px; }
+  .word-list-heading { align-items: flex-start; flex-direction: column; }
+  .word-list-actions { justify-content: space-between; width: 100%; }
+  .reroll-button { font-size: 10px; padding: 7px 10px; }
   .word-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .word-chip { justify-content: start; flex-wrap: nowrap; padding: 8px 11px; }
   .word-chip-stars { flex-basis: auto; text-align: right; margin-left: auto; }
