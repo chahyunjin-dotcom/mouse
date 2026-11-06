@@ -9,6 +9,7 @@ on:
       - 'fairy.png'
       - 'fairy1.png'
       - 'mouse-play-hyeonjin-2026/**'
+      - 'keyboard-practice/**'
       - '.github/workflows/deploy-mouse-games.yml'
   workflow_dispatch:
 
