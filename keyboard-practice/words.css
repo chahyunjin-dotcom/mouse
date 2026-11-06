@@ -1,0 +1,74 @@
+/* Fifth lesson: easy words without a final consonant (받침). */
+.lessons { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.lesson-tab { gap: 8px; padding: 13px 11px; }
+.lesson-copy strong { font-size: 18px; }
+.lesson-copy em { font-size: 10px; }
+.target-key.word-target {
+  width: 92%; max-width: 252px; height: 96px; font-size: 35px;
+  background: linear-gradient(155deg, #fff6e6, #ffddaa);
+  border-color: #ecc98e; box-shadow: 0 8px 0 #e9c28e;
+  letter-spacing: .02em;
+}
+.word-writing {
+  margin: 16px auto 5px; padding: 12px 11px;
+  border: 1.5px dashed #d7dfea; border-radius: 16px;
+  background: #f7f9fc; text-align: center;
+}
+.word-writing[hidden], .word-list-card[hidden] { display: none; }
+.writing-label { display: block; font-size: 11px; font-weight: 900; color: #8996a7; }
+.writing-syllables { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; }
+.writing-syllable {
+  width: 70px; height: 61px; border: 2px solid #e3e8ed;
+  border-bottom: 4px solid #d6dfe7; background: #fff;
+  border-radius: 13px; display: grid; place-items: center;
+  font: 36px 'Jua','Noto Sans KR',sans-serif; color: #b8c0cd;
+}
+.writing-syllable.partial { color: #d59b49; border-color: #ffda8c; background: #fffaf0; }
+.writing-syllable.done { color: #2e8271; border-color: #a4dfc9; background: #eafaef; }
+.word-list-card {
+  margin-top: 18px; background: white;
+  border: 1px solid #eaedf1; border-radius: 23px;
+  padding: 22px 26px 25px; box-shadow: 0 8px 28px #28344d08;
+}
+.word-list-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 17px; }
+.word-list-kicker { display: block; font-size: 10px; letter-spacing: 2px; font-weight: 900; color: #e0a455; margin-bottom: 4px; }
+.word-list-heading h2 { font: 23px 'Jua','Noto Sans KR',sans-serif; margin: 0; }
+.word-list-heading p { color: #8a94a0; font-size: 11px; margin: 5px 0 0; font-weight: 700; }
+.word-list-count { white-space: nowrap; font-weight: 900; font-size: 12px; color: #5aaf94; background: #eaf8f0; padding: 9px 13px; border-radius: 30px; }
+.word-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; }
+.word-chip {
+  display: flex; align-items: center; gap: 8px; min-width: 0;
+  background: #f9fafc; border: 1.5px solid #edf0f3;
+  border-radius: 13px; padding: 11px 12px; color: #55637a;
+}
+.word-chip.current { background: #fff7e7; border-color: #f1c67f; box-shadow: 0 2px 0 #f6deaf; }
+.word-chip.done { background: #f0faf5; border-color: #c9e8d7; }
+.word-chip-emoji { font-size: 21px; flex: none; }
+.word-chip strong { font: 18px 'Jua','Noto Sans KR',sans-serif; white-space: nowrap; }
+.word-chip-stars { font-size: 12px; letter-spacing: 1px; color: #e4ad4e; margin-left: auto; white-space: nowrap; }
+.word-chip:not(.current):not(.done) .word-chip-stars { color: #c9d0d8; }
+@media(max-width:1120px) {
+  .lessons { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .lesson-tab { padding: 12px 10px; }
+  .word-grid { grid-template-columns: repeat(5,minmax(0,1fr)); gap: 7px; }
+  .word-chip { padding: 9px; gap: 5px; }
+  .word-chip strong { font-size: 16px; }
+}
+@media(max-width:840px) {
+  .lessons { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .word-grid { grid-template-columns: repeat(5,minmax(0,1fr)); }
+  .word-chip { flex-wrap: wrap; justify-content: center; }
+  .word-chip-stars { flex-basis: 100%; text-align: center; margin: 0; }
+}
+@media(max-width:560px) {
+  .word-list-card { padding: 15px 12px; }
+  .word-list-heading h2 { font-size: 20px; }
+  .word-list-heading p { font-size: 10px; }
+  .word-list-count { font-size: 10px; padding: 7px 9px; }
+  .word-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .word-chip { justify-content: start; flex-wrap: nowrap; padding: 8px 11px; }
+  .word-chip-stars { flex-basis: auto; text-align: right; margin-left: auto; }
+  .target-key.word-target { width: 90%; height: 80px; font-size: 30px; }
+  .writing-syllable { width: 63px; height: 55px; font-size: 30px; }
+  .word-writing { margin: 11px auto 3px; }
+}
