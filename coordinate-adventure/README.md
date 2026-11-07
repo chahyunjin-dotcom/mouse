@@ -12,6 +12,10 @@
 
 웹브라우저에서 `index.html`을 열거나 GitHub Pages의 `/coordinate-adventure/` 주소로 접속합니다. 학생 회원가입이나 로그인이 필요하지 않습니다.
 
+## GitHub Pages
+
+이 저장소는 `main` 브랜치의 `/(root)` 폴더를 GitHub Pages로 게시합니다. 공개 게임 주소: https://chahyunjin-dotcom.github.io/mouse/coordinate-adventure/
+
 ## 수업 활용
 
 5분 방향 놀이 → 10분 상대좌표 → 10분 절대좌표 → 10분 명령 조립 → 5분 정리.
