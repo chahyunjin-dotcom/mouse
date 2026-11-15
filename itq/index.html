@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#183c80" />
+  <title>ITQ 실기시험 절차 연습 | 차차샘</title>
+  <style>
+    :root { --navy:#17366a; --blue:#2664d8; --blue-deep:#164db5; --pale:#edf4ff; --ink:#172640; --muted:#5e6d84; --border:#dae4f2; --bg:#f3f6fc; --ok:#117653; --warn:#a85b04; --red:#af3030; --shadow:0 18px 54px rgba(24,52,104,.10); }
+    *{box-sizing:border-box} html{height:100%} body{margin:0;min-height:100vh;font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',system-ui,sans-serif;color:var(--ink);background:linear-gradient(145deg,#eaf1fc 0%,#f7f9fd 52%,#eef3fc 100%)}
+    button,input,select{font:inherit} button{cursor:pointer} button:disabled{cursor:not-allowed;opacity:.47} button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #8cb5ff;outline-offset:3px} [hidden]{display:none!important}
+    .top{background:#12336e;color:white;min-height:76px;display:flex;align-items:center;justify-content:space-between;padding:16px max(25px,calc((100vw - 1080px)/2));gap:16px}
+    .brand{display:flex;align-items:center;gap:12px}.brand-mark{width:43px;height:43px;border-radius:12px;background:#fff;color:#1648a4;display:grid;place-items:center;font-weight:900;font-size:17px;letter-spacing:-1px}.brand-title{font-size:19px;font-weight:800;letter-spacing:-.6px}.brand-sub{font-size:12px;color:#d3e2ff;margin-top:3px}.top-pill{border:1px solid #7391c5;color:#e4edff;border-radius:30px;padding:8px 13px;font-size:12px;white-space:nowrap}
+    main{max-width:1080px;margin:27px auto 45px;padding:0 18px}.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin:0 0 19px}.eyebrow{font-size:12px;font-weight:800;color:var(--blue);letter-spacing:1.3px}.intro h1{font-size:clamp(25px,3.4vw,34px);margin:7px 0 8px;letter-spacing:-1.2px}.intro p{color:var(--muted);font-size:14px;margin:0;line-height:1.7}.intro-right{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:12px;white-space:nowrap}
+    .stepper{background:white;border:1px solid var(--border);border-radius:15px;display:grid;grid-template-columns:repeat(5,1fr);padding:15px;margin-bottom:17px;box-shadow:0 4px 19px rgba(29,55,90,.04)}.step{display:flex;align-items:center;gap:9px;justify-content:center;color:#8592a8;font-weight:700;font-size:13px;letter-spacing:-.4px}.step-num{width:28px;height:28px;border-radius:50%;background:#e9eef6;display:grid;place-items:center;color:#73829c;font-weight:800;font-size:13px}.step.active{color:var(--blue-deep)}.step.active .step-num{background:var(--blue);color:white}.step.done{color:var(--ok)}.step.done .step-num{color:white;background:var(--ok)}
+    .panel{background:white;border:1px solid var(--border);box-shadow:var(--shadow);border-radius:18px;overflow:hidden}.panel-top{padding:22px 30px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(90deg,#ffffff,#f8fbff)}.section-title{font-weight:850;font-size:21px;margin:0;letter-spacing:-.7px}.section-sub{font-size:13px;line-height:1.6;color:var(--muted);margin-top:5px}.badge{display:inline-flex;align-items:center;gap:6px;background:#e9f1ff;color:#1c55af;border-radius:22px;padding:7px 11px;font-size:12px;font-weight:750;white-space:nowrap}.panel-body{padding:27px 30px 28px}.foot{padding:17px 30px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;background:#fbfcff}
+    .btn{border:0;border-radius:11px;padding:12px 20px;font-weight:800;line-height:1.2;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:45px;transition:background .15s,transform .15s}.btn:hover:not(:disabled){transform:translateY(-1px)}.primary{color:#fff;background:var(--blue)}.primary:hover:not(:disabled){background:var(--blue-deep)}.secondary{background:#e9f0fa;color:#24426c}.secondary:hover:not(:disabled){background:#dce9fc}.outline{background:white;color:var(--blue-deep);border:1px solid #a9c5f4}.danger{background:#fff2f2;color:var(--red);border:1px solid #f0c8c8}.tiny{padding:8px 12px;min-height:35px;font-size:12px}
+    .notice-card{display:grid;grid-template-columns:43px 1fr;gap:13px;border-radius:13px;background:#ecf3ff;border:1px solid #c9dcff;padding:17px;margin-bottom:20px}.notice-icon{width:40px;height:40px;display:grid;place-items:center;background:#d5e6ff;color:#124da3;border-radius:12px;font-size:21px;font-weight:900}.notice-card strong{display:block;font-size:15px;margin-bottom:4px}.notice-card p{color:#435a79;font-size:13px;line-height:1.75;margin:0}.notice-list{list-style:none;padding:0;margin:0;display:grid;gap:11px}.notice-list li{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;font-size:14px;line-height:1.8}.check-icon{width:19px;height:19px;border-radius:6px;color:#167358;background:#dff7ec;text-align:center;font-size:12px;font-weight:900;margin-top:4px}.notice-list b{color:#182f57}.verify{display:flex;align-items:flex-start;gap:11px;background:#fbfcff;border:1px solid var(--border);border-radius:12px;margin-top:23px;padding:15px;font-size:14px;line-height:1.6;cursor:pointer}.verify input{width:19px;height:19px;accent-color:var(--blue);flex:0 0 auto;margin-top:2px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}.form-field{display:flex;flex-direction:column;gap:9px}.form-field.full{grid-column:1/-1}.form-field label{font-size:14px;font-weight:800}.field{height:48px;border:1px solid #bacce6;padding:0 14px;border-radius:10px;background:white;color:#1e3451;width:100%}.field::placeholder{color:#a3afc2}.hint{font-size:12px;color:var(--muted);line-height:1.6}.error{font-size:13px;color:var(--red);font-weight:700;margin-top:10px;min-height:19px}.info-line{background:#f4f8fe;border-left:3px solid #4d83dc;padding:14px 16px;margin:22px 0 0;border-radius:6px;font-size:13px;line-height:1.8;color:#405673}.preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.preview-item{border:1px solid var(--border);border-radius:12px;padding:15px 17px;background:#fbfdff}.preview-label{font-size:12px;color:var(--muted);margin-bottom:7px}.preview-value{font-size:17px;font-weight:850;overflow-wrap:anywhere}.blue{color:var(--blue-deep)}.small{font-size:13px}.exam-area{display:grid;grid-template-columns:minmax(0,1fr) 295px;gap:17px}.block{border:1px solid var(--border);border-radius:13px;padding:19px 20px;background:#fff;margin-bottom:14px}.block:last-child{margin-bottom:0}.block h3{font-size:16px;letter-spacing:-.5px;margin:0 0 9px;display:flex;align-items:center;gap:8px}.circle{display:inline-grid;place-items:center;width:24px;height:24px;background:#e9f1ff;color:var(--blue-deep);border-radius:8px;font-size:12px}.block p{font-size:13px;line-height:1.8;color:var(--muted);margin:3px 0 13px}.path{background:#f4f7fb;border:1px solid #e2eaf5;padding:12px;border-radius:9px;font-family:Consolas,'Malgun Gothic',monospace;font-size:13px;line-height:1.7;overflow-wrap:anywhere;margin-bottom:10px}.row-actions{display:flex;gap:8px;flex-wrap:wrap}.upload{display:block;border:2px dashed #b7cced;border-radius:11px;padding:15px;background:#f9fbff;cursor:pointer;text-align:center;color:#1e4f9e;font-size:13px;font-weight:800}.upload input{display:none}.filename-status{font-size:13px;line-height:1.7;margin-top:10px;overflow-wrap:anywhere}.ok{color:var(--ok)}.bad{color:var(--red)}.side{border:1px solid var(--border);border-radius:13px;overflow:hidden;background:#f9fbff;align-self:start}.side-head{background:#e9f2ff;padding:16px 18px;font-size:13px;font-weight:800;color:#234c8e}.timer{font-size:46px;font-weight:900;text-align:center;letter-spacing:1.5px;color:var(--navy);padding:18px 8px 10px;font-variant-numeric:tabular-nums}.timer-label{text-align:center;font-size:12px;color:var(--muted);margin-bottom:18px}.side-list{padding:14px 17px;border-top:1px solid var(--border);display:grid;gap:11px}.side-line{display:flex;justify-content:space-between;gap:9px;font-size:12px}.side-line span{color:var(--muted)}.side-line b{text-align:right;overflow-wrap:anywhere}.log{margin-top:16px;border-top:1px solid var(--border);padding-top:14px}.log h4{margin:0 0 9px;font-size:13px}.log ul{margin:0;padding-left:18px;font-size:12px;color:#536681;line-height:1.8;max-height:180px;overflow-y:auto}.log-empty{font-size:12px;color:#94a1b4}.alert{border-radius:11px;padding:12px 14px;background:#fff7e9;border:1px solid #eed5a5;font-size:12px;line-height:1.7;color:#785118;margin-top:12px}.success-icon{height:75px;width:75px;background:#e0f7eb;color:#11744a;border-radius:50%;display:grid;place-items:center;font-size:44px;font-weight:900;margin:4px auto 14px}.success-title{text-align:center;font-size:25px;font-weight:900;letter-spacing:-.7px;margin:0 0 8px}.success-text{text-align:center;color:var(--muted);font-size:14px;line-height:1.8;margin:0 0 23px}.result{max-width:610px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden}.result-row{display:flex;padding:14px 18px;border-bottom:1px solid var(--border);font-size:14px;gap:15px;align-items:start}.result-row:last-child{border-bottom:0}.result-row span{width:112px;color:var(--muted);flex:none}.result-row strong{overflow-wrap:anywhere}.subnote{font-size:12px;color:var(--muted);line-height:1.8;max-width:1080px;margin:15px auto;text-align:center}.nowrap{white-space:nowrap}
+    .overlay{position:fixed;inset:0;background:rgba(10,29,59,.58);z-index:10;display:grid;place-items:center;padding:20px}.dialog{max-width:510px;width:100%;background:white;border-radius:16px;box-shadow:0 24px 80px #102b5370;overflow:hidden}.dialog h2{margin:0;font-size:20px}.dialog-head{padding:21px 24px 16px;border-bottom:1px solid var(--border)}.dialog-body{padding:21px 24px;color:#3e516e;font-size:14px;line-height:1.8}.dialog-foot{display:flex;justify-content:flex-end;gap:8px;padding:16px 24px;background:#f7faff;border-top:1px solid var(--border)}
+    @media(max-width:760px){.top{padding:14px 18px}.top-pill{display:none}.intro-right{display:none}main{margin-top:18px}.stepper{padding:12px 5px}.step{font-size:10px;flex-direction:column;gap:5px}.step-num{width:25px;height:25px}.panel-top,.panel-body,.foot{padding-left:19px;padding-right:19px}.exam-area{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr;gap:17px}.form-field.full{grid-column:auto}.preview-grid{grid-template-columns:1fr 1fr}.timer{font-size:42px}.intro h1{font-size:26px}.foot{justify-content:center}.foot .btn{flex:1}.panel-top{align-items:flex-start;flex-direction:column}}
+    @media(max-width:430px){.brand-title{font-size:16px}.preview-grid{grid-template-columns:1fr}.notice-list li{font-size:13px}.result-row span{width:90px}.btn{padding:11px 13px}}
+    .sr-only{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+    /* 모의 Windows 바탕화면 */
+    #screen4 .panel-body{padding:18px}
+    .exam-area{grid-template-columns:minmax(0,1fr) 275px;gap:16px;align-items:stretch}
+    .exam-area .side{align-self:stretch}
+    .desktop{height:552px;min-height:552px;position:relative;overflow:hidden;border-radius:13px;background:
+       radial-gradient(ellipse 70% 85% at 82% 16%,rgba(142,210,255,.55),transparent 62%),
+       radial-gradient(ellipse 75% 70% at 64% 72%,rgba(19,99,236,.78),transparent 69%),
+       linear-gradient(135deg,#042f6a 0%,#0757aa 32%,#0988d3 60%,#0c347c 100%);
+       box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);isolation:isolate;color:#fff}
+    .desktop:before,.desktop:after{content:'';position:absolute;pointer-events:none;z-index:-1;transform:rotate(-28deg);border-radius:46% 54% 60% 40%;filter:blur(1px)}
+    .desktop:before{width:610px;height:270px;right:-180px;top:105px;background:linear-gradient(160deg,rgba(181,233,255,.6) 0%,rgba(34,161,255,.28) 43%,rgba(5,38,113,.16) 66%,transparent 67%);box-shadow:0 23px 63px rgba(3,46,128,.33)}
+    .desktop:after{width:520px;height:230px;right:-35px;top:240px;background:linear-gradient(20deg,transparent 0%,rgba(24,87,194,.1) 18%,rgba(145,217,253,.34) 63%,rgba(254,255,255,.1) 78%,transparent 100%)}
+    .desk-toplabel{position:absolute;top:13px;right:17px;font-size:10px;letter-spacing:.7px;color:#e1f1ff;background:#113a7977;border:1px solid #e1f1ff40;border-radius:40px;padding:6px 10px}
+    .desktop-icons{position:absolute;top:24px;left:15px;display:flex;flex-direction:column;gap:8px;z-index:2}
+    .desktop-icon{width:87px;min-height:82px;padding:7px 5px;border:1px solid transparent;border-radius:7px;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:5px;background:transparent;color:#fff;text-shadow:0 1px 3px #093969;font-weight:600;font-size:11px;text-align:center;line-height:1.3;cursor:pointer}
+    .desktop-icon:hover,.desktop-icon:focus-visible{background:#d6f1ff33;border-color:#d6f1ff78;outline-offset:1px}
+    .desk-icon-art{height:39px;display:flex;align-items:center;justify-content:center;font-size:36px;filter:drop-shadow(0 4px 3px #05295165)}
+    .desk-icon-art svg{width:41px;height:41px;filter:drop-shadow(0 4px 3px #05295155)}
+    .desktop-center{position:absolute;left:114px;right:15px;top:57px;display:grid;place-items:center;z-index:1}
+    .desk-window{width:min(100%,430px);background:#f9fcff;color:#1d3855;border-radius:11px;overflow:hidden;box-shadow:0 20px 45px rgba(1,23,75,.4),0 0 0 1px #ecf7ffad}
+    .desk-windowbar{height:39px;background:#e7f1ff;display:flex;align-items:center;justify-content:space-between;padding:0 13px;color:#244b7d;font-size:12px;font-weight:800;border-bottom:1px solid #d3e5fa}
+    .win-controls{display:flex;gap:12px;color:#6f87a7;font-size:13px;line-height:1;font-weight:500}
+    .desk-windowbody{padding:23px 20px 24px;text-align:center}
+    .desk-windowbody .desk-symbol{height:58px;width:58px;border-radius:17px;background:#e0efff;margin:0 auto 12px;color:#1557bc;display:grid;place-items:center}
+    .desk-windowbody h3{font-size:22px;line-height:1.35;margin:0 0 9px;letter-spacing:-.8px;color:#173969}
+    .desk-windowbody p{color:#637795;font-size:12px;line-height:1.7;margin:0 0 17px}
+    .side-transfer{padding:0 17px 17px;display:grid;gap:4px}
+    #sendAnswer{width:100%;min-height:54px;font-size:18px;border-radius:11px;background:linear-gradient(135deg,#1557bf,#2778ee);box-shadow:0 6px 18px rgba(33,101,219,.2)}
+    #sendAnswer:hover:not(:disabled){background:linear-gradient(135deg,#154dab,#176bdb)}
+    #transferStatus{font-size:12px;text-align:left;margin:7px 0 0;min-height:0;line-height:1.6}
+    .desk-tray{position:absolute;left:115px;right:15px;bottom:54px;background:#ffffffed;color:#234261;border:1px solid #ffffffc4;border-radius:10px;padding:12px 14px;box-shadow:0 7px 28px #09346637;z-index:2}
+    .desk-tray-title{color:#587393;font-size:11px;font-weight:800}
+    .desk-tray #selectedFileStatus{font-weight:800;margin:5px 0 3px;font-size:12px;max-height:32px;overflow:auto}
+    .desk-tray #pathText{font-size:11px;line-height:1.4;color:#4b6482;overflow-wrap:anywhere;margin:5px 0 0}
+    .desk-tray .tray-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .desk-tray .tray-actions button{padding:5px 9px;min-height:27px;font-size:11px;border-radius:7px}
+    .desk-tray #saveStatus{font-size:11px;margin-top:5px;max-height:27px;overflow:auto}
+    .desktop-taskbar{position:absolute;bottom:0;left:0;right:0;height:41px;background:#0d2456cf;backdrop-filter:blur(10px);border-top:1px solid #ffffff45;display:flex;align-items:center;gap:10px;padding:0 12px;font-size:11px;color:#e6f6ff}
+    .window-logo{display:grid;grid-template-columns:repeat(2,10px);grid-template-rows:repeat(2,10px);gap:2px;transform:skewY(-5deg)}.window-logo i{background:#b6e6ff;display:block}
+    .taskbar-app{padding:5px 10px;border-radius:7px;background:#ffffff20;white-space:nowrap}
+    .taskbar-clock{margin-left:auto;white-space:nowrap;text-align:right;font-size:10px;line-height:1.4}
+    .fake-info{font-size:11px;color:#d6edff;margin-top:3px}
+    .result-preview-grid{grid-template-columns:repeat(2,1fr)}
+    @media(max-width:760px){.exam-area{grid-template-columns:1fr}#screen4 .panel-body{padding:14px}.desktop{height:560px;min-height:560px}.exam-area .side{align-self:start}}
+    @media(max-width:430px){.desktop{height:752px;min-height:752px}.desktop-icons{left:5px;top:30px;gap:4px}.desktop-icon{width:76px;min-height:75px;font-size:10px}.desk-icon-art svg{width:35px;height:35px}.desktop-center{left:88px;right:7px;top:65px}.desk-windowbody{padding:17px 8px}.desk-windowbody h3{font-size:18px}.desk-windowbody p{font-size:11px}#sendAnswer{min-height:52px;font-size:16px}.desk-tray{left:88px;right:7px;bottom:51px;padding:10px}.desk-tray #selectedFileStatus{max-height:50px}.desk-tray .tray-actions{gap:5px}.desk-tray .tray-actions button{padding:6px;font-size:10px}.desk-toplabel{right:6px;top:7px}.desktop-taskbar{padding:0 9px}}
+
+    /* 바탕화면에는 한글 2022 바로가기 하나만 표시 */
+    .exam-left{min-width:0;display:flex;flex-direction:column;gap:12px}
+    .desktop-icon-only{cursor:default;user-select:none;width:106px;min-height:104px;padding:8px 4px;pointer-events:none}
+    .desktop-icon-only .desk-icon-art{height:61px}
+    .desktop-icon-only .desk-icon-art svg{width:54px;height:60px}
+    .desktop-icon-only>span:last-child{font-size:12px;font-weight:700;white-space:nowrap}
+    .file-tools{border:1px solid var(--border);border-radius:11px;background:#f8fbff;padding:13px 15px}
+    .file-tools-heading{font-size:13px;font-weight:850;color:#244771;display:flex;align-items:center;gap:9px}
+    .file-tools-heading span{font-size:11px;font-weight:600;color:#71829a}
+    .file-tools-actions{display:flex;flex-wrap:wrap;gap:7px;margin:11px 0}
+    .file-tools-actions .btn{min-height:33px;padding:7px 10px;font-size:11px}
+    .file-pick{cursor:pointer}
+    .file-tools-status{font-size:12px;color:#4b6482;line-height:1.5}
+    .file-tools-status #selectedFileStatus{font-weight:750;margin:6px 0}
+    .file-tools-status #pathText{overflow-wrap:anywhere;font-size:11px}
+    .file-tools-status #saveStatus{font-size:11px}
+    .file-tools-subrow{display:flex;gap:12px;align-items:center;margin-top:8px;flex-wrap:wrap;color:#7887a0;font-size:11px}
+    @media(max-width:430px){.desktop-icon-only{width:102px;min-height:100px}.desktop-icon-only .desk-icon-art svg{width:51px;height:57px}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><div class="brand-mark" aria-hidden="true">ITQ</div><div><div class="brand-title">ITQ 실기시험 절차 연습</div><div class="brand-sub">차차샘 · 시험 전 절차 교육용 웹 프로그램</div></div></div>
+    <div class="top-pill">비공식 모의시험 · 실제 답안 제출 불가</div>
+  </header>
+  <main>
+    <div class="intro"><div><div class="eyebrow">ITQ PRACTICE CENTER</div><h1>실제 시험 전에, 순서를 미리 연습해요!</h1><p>수험자 등록부터 답안 전송 확인까지 화면을 따라 직접 체험할 수 있어요.</p></div><div class="intro-right">● 브라우저에서 실행 · 회원가입 불필요</div></div>
+    <nav class="stepper" aria-label="진행 단계"><div class="step active" data-step="1"><div class="step-num">1</div><span>유의사항</span></div><div class="step" data-step="2"><div class="step-num">2</div><span>수험자 등록</span></div><div class="step" data-step="3"><div class="step-num">3</div><span>정보 확인</span></div><div class="step" data-step="4"><div class="step-num">4</div><span>시험 진행</span></div><div class="step" data-step="5"><div class="step-num">5</div><span>시험 종료</span></div></nav>
+
+    <section class="panel" id="screen1" aria-labelledby="title1">
+      <div class="panel-top"><div><h2 class="section-title" id="title1">시험 전 수험자 유의사항</h2><div class="section-sub">아래 사항을 꼼꼼히 읽은 뒤 확인 버튼을 눌러주세요.</div></div><span class="badge">STEP 01 / 05</span></div>
+      <div class="panel-body">
+        <div class="notice-card"><div class="notice-icon" aria-hidden="true">!</div><div><strong>시험 시작 전 꼭 확인하세요.</strong><p>이 화면은 ITQ 시험 절차를 익히기 위한 연습용입니다. 시험장에서는 감독위원의 지시와 해당 시험의 공식 안내를 우선 따라야 합니다.</p></div></div>
+        <ul class="notice-list">
+          <li><span class="check-icon">✓</span><span><b>수험표 및 신분 확인</b> : 감독위원의 지시에 따라 본인 확인을 진행합니다.</span></li>
+          <li><span class="check-icon">✓</span><span><b>응시 과목 확인</b> : 수험표와 문제지에 표시된 시험 과목이 맞는지 확인합니다.</span></li>
+          <li><span class="check-icon">✓</span><span><b>답안 저장</b> : 답안은 지정 폴더 <b>내 PC → 문서 → ITQ</b>에 저장합니다.</span></li>
+          <li><span class="check-icon">✓</span><span><b>파일명 확인</b> : 답안파일 이름은 <b>수험번호-성명</b> 형식으로 만듭니다. 예: <b>12345678-홍길동.xlsx</b></span></li>
+          <li><span class="check-icon">✓</span><span><b>중간 답안 전송</b> : 작업 중에도 수시로 저장하고, '답안 전송'으로 제출 여부를 점검합니다.</span></li>
+          <li><span class="check-icon">✓</span><span><b>시험 종료</b> : 마지막 답안 전송 결과를 확인하고 감독위원의 안내에 따라 종료합니다.</span></li>
+        </ul>
+        <label class="verify"><input type="checkbox" id="agree"/><span>위 수험자 유의사항을 읽고 확인했습니다.</span></label>
+      </div>
+      <div class="foot"><span class="hint">※ 본 페이지는 한국생산성본부 공식 시험 프로그램이 아닙니다.</span><button class="btn primary" id="noticeNext" disabled>다음 · 수험자 등록 →</button></div>
+    </section>
+
+    <section class="panel" id="screen2" aria-labelledby="title2" hidden>
+      <div class="panel-top"><div><h2 class="section-title" id="title2">수험자 정보 입력</h2><div class="section-sub">수험번호와 이름만 입력해 주세요.</div></div><span class="badge">STEP 02 / 05</span></div>
+      <div class="panel-body">
+        <form id="candidateForm" novalidate>
+          <div class="form-grid">
+            <div class="form-field"><label for="examNumber">수험번호 <span class="blue">*</span></label><input class="field" id="examNumber" type="text" maxlength="8" inputmode="numeric" autocomplete="off" placeholder="예: 12345678" required/><span class="hint">연습용으로 숫자 8자리를 입력해 주세요.</span></div>
+            <div class="form-field"><label for="candidateName">성명 <span class="blue">*</span></label><input class="field" id="candidateName" type="text" maxlength="25" autocomplete="off" placeholder="예: 홍길동" required/><span class="hint">이름의 앞뒤 공백은 자동으로 제외됩니다.</span></div>
+          </div>
+          <div class="error" id="formError" role="alert" aria-live="polite"></div>
+          <div class="info-line">💡 수험번호와 이름은 파일명을 만들 때 사용됩니다. 이 연습 페이지는 입력한 정보를 서버로 보내거나 보관하지 않습니다.</div>
+        </form>
+      </div>
+      <div class="foot"><button class="btn secondary" id="backToNotice">← 이전</button><button class="btn primary" id="registerBtn">수험정보 확인 →</button></div>
+    </section>
+
+    <section class="panel" id="screen3" aria-labelledby="title3" hidden>
+      <div class="panel-top"><div><h2 class="section-title" id="title3">수험정보 최종 확인</h2><div class="section-sub">본인 정보가 올바른지 확인한 후 시험을 시작하세요.</div></div><span class="badge">STEP 03 / 05</span></div>
+      <div class="panel-body"><div class="preview-grid result-preview-grid"><div class="preview-item"><div class="preview-label">수험번호</div><div class="preview-value" id="previewNumber"></div></div><div class="preview-item"><div class="preview-label">성명</div><div class="preview-value" id="previewName"></div></div></div><div class="info-line"><b>답안 파일명 예시 (한글):</b><div class="path" style="margin:9px 0 0" id="previewFileName"></div>엑셀·파워포인트 등 다른 프로그램은 확장자가 다릅니다. 확인 후 시작하면 60분 연습 타이머가 작동합니다. 시간은 이 페이지에서만 측정됩니다.</div></div>
+      <div class="foot"><button class="btn secondary" id="backToForm">← 정보 수정</button><button class="btn primary" id="startExam">시험 시작 ▶</button></div>
+    </section>
+
+    <section class="panel" id="screen4" aria-labelledby="title4" hidden>
+      <div class="panel-top"><div><h2 class="section-title" id="title4">ITQ 실기 모의시험 진행</h2><div class="section-sub">한글 2022 바탕화면을 살펴보고 답안 전송 절차를 연습해 보세요.</div></div><span class="badge" id="progressBadge">● 시험 진행 중</span></div>
+      <div class="panel-body">
+        <div class="exam-area">
+          <div class="exam-left">
+          <div class="desktop" aria-label="Windows 바탕화면을 모방한 모의시험 화면">
+            <span class="desk-toplabel">교육용 모의 바탕화면</span>
+            <div class="desktop-icons" aria-label="바탕화면 아이콘">
+              <div class="desktop-icon desktop-icon-only" role="img" aria-label="아래한글 2022 프로그램 바로가기 아이콘">
+                <span class="desk-icon-art" aria-hidden="true">
+                  <svg viewBox="0 0 56 60" xmlns="http://www.w3.org/2000/svg">
+                    <defs><linearGradient id="hangul2022" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0eaeea"/><stop offset="1" stop-color="#0487cd"/></linearGradient></defs>
+                    <rect x="11" y="5" width="39" height="47" rx="2" fill="#006cae"/>
+                    <rect x="6" y="2" width="39" height="47" rx="2" fill="url(#hangul2022)"/>
+                    <text x="25.5" y="36" fill="#004e92" font-family="Malgun Gothic, sans-serif" text-anchor="middle" font-size="30" font-weight="900">한</text>
+                    <rect x="2" y="39" width="18" height="17" rx="3" fill="#fff" stroke="#d3e1f2" stroke-width="1.2"/>
+                    <path d="M7 51l7-7m-5 0h5v5" stroke="#0c79c1" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>한글 2022</span>
+              </div>
+            </div>
+            <div class="desktop-taskbar" aria-hidden="true"><span class="window-logo"><i></i><i></i><i></i><i></i></span><span class="taskbar-app">ITQ 실기 연습</span><span class="taskbar-clock" id="desktopClock"></span></div>
+          </div>
+          <div class="file-tools" aria-label="답안 파일 준비 도구">
+            <div class="file-tools-heading">답안 파일 준비 <span>모의 전송용</span></div>
+            <div class="file-tools-actions">
+              <label class="btn secondary tiny file-pick" for="answerFile">답안 파일 선택</label>
+              <input class="sr-only" type="file" id="answerFile" accept=".xlsx,.xls,.pptx,.ppt,.hwp,.hwpx"/>
+              <button class="btn secondary tiny" type="button" id="useMockFile">연습용 답안 만들기</button>
+              <button class="btn secondary tiny" type="button" id="copyFileName">파일명 복사</button>
+              <button class="btn secondary tiny" type="button" id="markSaved">저장 확인</button>
+            </div>
+            <div class="file-tools-status">
+              <div class="filename-status" id="selectedFileStatus" aria-live="polite">선택된 파일이 없습니다.</div>
+              <div id="pathText"></div>
+              <div class="file-tools-subrow"><button class="btn secondary tiny" type="button" id="clearFile">파일 선택 취소</button><span>실제 파일은 전송되지 않습니다.</span></div>
+              <div class="filename-status" id="saveStatus" aria-live="polite"></div>
+            </div>
+          </div>
+          </div>
+          <aside class="side" aria-label="시험 현황"><div class="side-head">시험 진행 현황</div><div class="timer" id="timer" role="timer" aria-label="남은 시험 시간">60:00</div><div class="timer-label">남은 연습시간</div><div class="side-transfer"><button class="btn primary" type="button" id="sendAnswer">⇧ &nbsp; 답안 전송</button><div class="filename-status" id="transferStatus" role="status" aria-live="polite"></div></div><div class="side-list"><div class="side-line"><span>수험번호</span><b id="sideNumber"></b></div><div class="side-line"><span>수험자</span><b id="sideName"></b></div><div class="side-line"><span>전송 횟수</span><b id="sendCount">0회</b></div><div class="side-line"><span>최근 전송</span><b id="lastSend">없음</b></div><div class="log"><h4>진행 기록</h4><div class="log-empty" id="logEmpty">아직 기록이 없습니다.</div><ul id="logList"></ul></div><div class="alert">이곳의 답안 전송은 절차를 연습하는 기능입니다. 실제 시험 시스템으로 전송되지 않습니다.</div></div></aside>
+        </div>
+      </div>
+      <div class="foot"><span class="hint">모의 답안 전송을 1회 이상 완료하면 시험을 종료할 수 있습니다.</span><button class="btn primary" id="finishExam" disabled>시험 종료 →</button></div>
+    </section>
+
+    <section class="panel" id="screen5" aria-labelledby="title5" hidden>
+      <div class="panel-top"><div><h2 class="section-title" id="title5">시험 종료 확인</h2><div class="section-sub">모든 과정을 마쳤습니다. 모의 답안 전송 결과를 확인하세요.</div></div><span class="badge">STEP 05 / 05</span></div>
+      <div class="panel-body"><div class="success-icon" aria-hidden="true">✓</div><h3 class="success-title">모의시험을 완료했습니다!</h3><p class="success-text">수험정보 입력부터 답안 전송 확인까지 연습을 마쳤어요.<br/>실제 시험에서는 최종 전송 상태를 확인하고 감독위원 안내를 따라주세요.</p><div class="result"><div class="result-row"><span>수험번호</span><strong id="resultNumber"></strong></div><div class="result-row"><span>성명</span><strong id="resultName"></strong></div><div class="result-row"><span>전송 파일명</span><strong id="resultFile"></strong></div><div class="result-row"><span>모의 전송 횟수</span><strong id="resultCount"></strong></div><div class="result-row"><span>결과</span><strong class="ok">✓ 모의 답안 전송 완료</strong></div></div><div class="info-line" style="max-width:610px;margin:18px auto 0">실제 답안파일을 서버로 제출한 기록은 없습니다. 여기 표시되는 결과는 교육용 시뮬레이션의 성공 상태입니다.</div></div>
+      <div class="foot"><span class="hint">수고하셨습니다! 다시 시작하면 입력 정보는 초기화됩니다.</span><button class="btn primary" id="restart">↻ 처음부터 다시 연습</button></div>
+    </section>
+    <div class="subnote">교육용 비공식 연습 웹페이지 · 한국생산성본부(KPC)의 공식 시스템과 관련이 없습니다. 실제 시험 규정은 <a href="https://license.kpc.or.kr/nasec/cstmrcnter/useinfo/selectExnstnotice.do" target="_blank" rel="noopener noreferrer">KPC 수험자 유의사항</a>에서 확인하세요.</div>
+  </main>
+
+  <div class="overlay" id="confirmOverlay" hidden>
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="confirmHeading" aria-describedby="confirmText">
+      <div class="dialog-head"><h2 id="confirmHeading">답안을 전송하시겠습니까?</h2></div>
+      <div class="dialog-body" id="confirmText"></div>
+      <div class="dialog-foot"><button class="btn secondary" id="cancelSend">취소</button><button class="btn primary" id="confirmSend">모의 전송 확인</button></div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const validExts = ['.xlsx','.xls','.pptx','.ppt','.hwp','.hwpx'];
+  let step = 1, candidate = null, selectedFile = null, sent = 0, seconds = 3600, startedAt = 0, clock = null, saved = false, finished = false;
+  const visible = n => { step = n; for(let i=1;i<=5;i++){ $('screen'+i).hidden = i!==n; const node = document.querySelector('[data-step="'+i+'"]'); node.classList.toggle('active',i===n); node.classList.toggle('done',i<n); node.querySelector('.step-num').textContent=i<n?'✓':String(i); } window.scrollTo({top:0,behavior:'instant'}); };
+  const escapeText = t => String(t).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+  const basename = () => `${candidate.number}-${candidate.name}`;
+  const expected = () => basename()+'.hwp'; // 한글 2022 연습용 예시 답안
+  const appendLog = message => { $('logEmpty').hidden = true; const li=document.createElement('li'); li.textContent=`${new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} ${message}`; $('logList').prepend(li); };
+  $('agree').addEventListener('change',e=>{$('noticeNext').disabled=!e.target.checked});
+  $('noticeNext').addEventListener('click',()=>visible(2));
+  $('backToNotice').addEventListener('click',()=>visible(1));
+  $('backToForm').addEventListener('click',()=>visible(2));
+  $('examNumber').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,8)});
+  const readCandidate = () => {
+    const number=$('examNumber').value.trim(), name=$('candidateName').value.trim().replace(/\s+/g,' ');
+    $('formError').textContent='';
+    if (!/^\d{8}$/.test(number)) { $('formError').textContent='수험번호를 숫자 8자리로 입력하세요.'; $('examNumber').focus(); return null; }
+    if (name.length < 2 || /[\\/:*?"<>|]/.test(name)) { $('formError').textContent='이름을 2글자 이상 입력해 주세요. 파일명에 사용할 수 없는 기호는 제외해 주세요.'; $('candidateName').focus(); return null; }
+    return {number,name};
+  };
+  $('registerBtn').addEventListener('click',()=>{
+    const data=readCandidate(); if(!data)return;
+    candidate=data;
+    $('previewNumber').textContent=data.number; $('previewName').textContent=data.name;
+    $('previewFileName').textContent=expected();
+    visible(3);
+  });
+  $('candidateForm').addEventListener('submit',e=>{e.preventDefault();$('registerBtn').click()});
+  const renderTimer = () => { $('desktopClock').textContent = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}); const mm=String(Math.floor(seconds/60)).padStart(2,'0'), ss=String(seconds%60).padStart(2,'0'); $('timer').textContent=`${mm}:${ss}`; $('timer').style.color=seconds<=300?'#af3030':''; };
+  const tick = () => {
+    if(finished)return;
+    seconds=Math.max(0,3600-Math.floor((Date.now()-startedAt)/1000));renderTimer();
+    if(seconds===0){ clearInterval(clock); clock=null; $('progressBadge').textContent='시간 종료 · 마지막 전송 확인'; $('transferStatus').textContent='연습 시간이 종료되었습니다. 진행 중인 작업은 저장·전송 여부를 확인하세요.'; $('transferStatus').className='filename-status bad'; appendLog('60분 연습 타이머 종료'); }
+  };
+  const updateFileStatus = () => {
+    const node=$('selectedFileStatus');
+    if (!selectedFile){node.className='filename-status';node.textContent='선택된 파일이 없습니다.';return}
+    const name=selectedFile.name;
+    const ext=name.slice(name.lastIndexOf('.')).toLowerCase();
+    const good = name.slice(0,name.length-ext.length)===basename() && validExts.includes(ext);
+    node.className='filename-status '+(good?'ok':'bad');
+    node.textContent=(good?'✓ ': '⚠ ')+(selectedFile.fake?'가상 답안: ':'선택한 파일: ')+name+(good?' · 파일명 일치':' · 수험번호, 성명, 파일 확장자를 확인하세요.');
+  };
+  $('startExam').addEventListener('click',()=>{
+    visible(4); $('pathText').textContent='내 PC \\ 문서 \\ ITQ \\ '+expected();
+    $('sideNumber').textContent=candidate.number; $('sideName').textContent=candidate.name;
+    $('saveStatus').textContent=''; $('transferStatus').textContent=''; selectedFile=null;updateFileStatus();
+    seconds=3600;renderTimer();startedAt=Date.now();
+    if(clock)clearInterval(clock);clock=setInterval(tick,400);
+    appendLog('모의시험 시작');
+  });
+  $('copyFileName').addEventListener('click',async()=>{
+    const value=expected();
+    try {if(navigator.clipboard && window.isSecureContext) {await navigator.clipboard.writeText(value);$('saveStatus').textContent='✓ 파일명을 복사했습니다.';}
+      else {const input=document.createElement('textarea');input.value=value;input.style.position='fixed';input.style.left='-9999px';document.body.append(input);input.select();const success=document.execCommand('copy');input.remove();$('saveStatus').textContent=success?'✓ 파일명을 복사했습니다.':'파일명: '+value;}}
+    catch(e){$('saveStatus').textContent='파일명: '+value}
+    $('saveStatus').className='filename-status ok';
+  });
+  $('markSaved').addEventListener('click',()=>{saved=true;$('saveStatus').className='filename-status ok';$('saveStatus').textContent='✓ 저장 확인을 연습했습니다. 실제 문서 파일은 직접 저장해야 합니다.';appendLog('저장 확인 연습')});
+  $('answerFile').addEventListener('change',e=>{const file=e.target.files?.[0]; selectedFile=file?{name:file.name,fake:false}:null;updateFileStatus()});
+  $('useMockFile').addEventListener('click',()=>{selectedFile={name:expected(),fake:true};$('answerFile').value='';updateFileStatus();appendLog('가상 답안 선택')});
+  $('clearFile').addEventListener('click',()=>{selectedFile=null;$('answerFile').value='';updateFileStatus()});
+  const validFile = () => {
+    if(!selectedFile)return false;
+    const name=selectedFile.name, ext=name.slice(name.lastIndexOf('.')).toLowerCase();
+    return name.slice(0,name.length-ext.length)===basename() && validExts.includes(ext);
+  };
+  const showModal = () => { const text=$('confirmText');text.innerHTML=`<div><b>수험번호:</b> ${escapeText(candidate.number)}</div><div><b>성명:</b> ${escapeText(candidate.name)}</div><div><b>전송할 파일:</b> ${escapeText(selectedFile.name)}</div><p style="margin:14px 0 0;color:#99661c;background:#fff7e7;padding:11px;border-radius:8px;font-size:13px">※ 모의 전송입니다. 실제 감독위원 PC나 인터넷 서버로 파일이 전송되지는 않습니다.</p>`; $('confirmOverlay').hidden=false;$('confirmSend').focus() };
+  const hideModal = () => { $('confirmOverlay').hidden=true;$('sendAnswer').focus() };
+  $('sendAnswer').addEventListener('click',()=>{
+    if(!selectedFile){$('transferStatus').textContent='답안파일을 먼저 선택하거나 가상 답안을 사용해 주세요.';$('transferStatus').className='filename-status bad';return;}
+    if(!validFile()){$('transferStatus').textContent='전송할 수 없습니다. 답안 파일명을 수험번호-성명 형식으로 맞추고 사용 가능한 형식의 파일을 선택해 주세요.';$('transferStatus').className='filename-status bad';return;}
+    showModal();
+  });
+  $('cancelSend').addEventListener('click',hideModal);
+  $('confirmOverlay').addEventListener('click',e=>{if(e.target===$('confirmOverlay'))hideModal()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape' && !$('confirmOverlay').hidden)hideModal()});
+  $('confirmSend').addEventListener('click',()=>{
+    $('confirmOverlay').hidden=true;sent+=1;$('sendCount').textContent=sent+'회';
+    $('lastSend').textContent=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+    $('transferStatus').className='filename-status ok';
+    $('transferStatus').textContent=`✓ ${sent}번째 모의 답안 전송이 완료되었습니다. 실제 제출은 이루어지지 않았습니다.`;
+    $('finishExam').disabled=false; appendLog(`${sent}번째 모의 답안 전송 완료 · ${selectedFile.name}`);$('sendAnswer').focus();
+  });
+  $('finishExam').addEventListener('click',()=>{
+    if(sent<1)return;
+    if(clock){clearInterval(clock);clock=null;} finished=true;
+    $('resultNumber').textContent=candidate.number;$('resultName').textContent=candidate.name;
+    $('resultFile').textContent=selectedFile?.name || expected();$('resultCount').textContent=sent+'회'; visible(5);
+  });
+  $('restart').addEventListener('click',()=>{
+    if(clock){clearInterval(clock);clock=null;}finished=false;candidate=null;selectedFile=null;sent=0;seconds=3600;saved=false;
+    $('agree').checked=false;$('noticeNext').disabled=true;$('examNumber').value='';$('candidateName').value='';$('answerFile').value='';
+    $('formError').textContent='';$('logList').replaceChildren();$('logEmpty').hidden=false;$('saveStatus').textContent='';$('transferStatus').textContent='';$('sendCount').textContent='0회';$('lastSend').textContent='없음';$('finishExam').disabled=true;$('progressBadge').textContent='● 시험 진행 중';visible(1);
+  });
+  visible(1);
+})();
+</script>
+</body>
+</html>
