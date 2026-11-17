@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#132444">
+  <title>AI 가위바위보 | 티처블 머신</title>
+  <style>
+    :root { color-scheme: light; font-family: 'Pretendard', 'Noto Sans KR', system-ui, sans-serif; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:#1a2943; min-height:100vh; background:linear-gradient(135deg,#d6ecff,#f0e8ff 60%,#fff7e6); }
+    .shell { width:min(980px,calc(100% - 28px)); margin:28px auto 40px; }
+    header { display:flex; gap:14px; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    header h1 { font-size:clamp(27px,4.4vw,42px); letter-spacing:-1.7px; margin:5px 0; }
+    header p { margin:0; color:#506283; font-size:14px; }
+    .tag { display:inline-flex; align-items:center; border-radius:999px; background:#fff; color:#2652a2; padding:7px 11px; font-size:12px; font-weight:800; box-shadow:0 4px 16px #18345b10; }
+    .emoji { font-size:clamp(42px,8vw,64px); flex-shrink:0; }
+    main { display:grid; grid-template-columns:1.18fr 1fr; gap:18px; }
+    .panel { background:#ffffffef; border:1px solid #ffffff; border-radius:24px; padding:21px; box-shadow:0 15px 50px #1f39601a; }
+    h2 { font-size:19px; margin:0 0 14px; }
+    .video-wrap { position:relative; overflow:hidden; background:#192a43; border-radius:17px; aspect-ratio:4/3; display:flex; justify-content:center; align-items:center; }
+    .video-wrap video { display:none; width:100%; height:100%; object-fit:cover; transform:scaleX(-1); }
+    .video-wrap.active video { display:block; }
+    .placeholder { color:#e5edff; text-align:center; line-height:1.75; padding:20px; }
+    .placeholder .camera-icon { font-size:50px; display:block; }
+    .video-wrap.active .placeholder { display:none; }
+    .live { position:absolute; left:12px; top:12px; color:#eafff7; background:#174e468f; padding:5px 10px; border-radius:50px; font-weight:700; font-size:12px; display:none; }
+    .video-wrap.active .live { display:block; }
+    .button-row { display:flex; gap:9px; margin-top:14px; }
+    button { cursor:pointer; border:none; font:inherit; font-weight:800; border-radius:13px; padding:13px 15px; transition:transform .15s, opacity .15s; }
+    button:active:not(:disabled) { transform:scale(.98); }
+    button:disabled { opacity:.45; cursor:not-allowed; }
+    .primary { color:white; background:linear-gradient(105deg,#2e70f6,#7153db); flex:1; }
+    .secondary { background:#e9f0ff; color:#2b4270; }
+    .play { width:100%; min-height:61px; font-size:19px; background:linear-gradient(110deg,#ffb852,#ff795f); color:#42221b; margin-top:13px; box-shadow:0 6px 20px #ff80512e; }
+    .note { font-size:13px; color:#65738e; line-height:1.6; margin:12px 0 0; }
+    .status { margin:12px 0 0; font-size:13px; color:#485879; min-height:22px; }
+    .status.error { color:#c02b46; }
+    .versus { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; }
+    .choice { border-radius:16px; background:#f0f5ff; text-align:center; padding:16px 6px 13px; }
+    .choice .hand { display:block; font-size:clamp(45px,7vw,70px); margin-bottom:4px; min-height:82px; }
+    .choice strong { font-size:17px; display:block; }
+    .choice small { display:block; font-size:13px; color:#60718e; margin-bottom:8px; }
+    .vs { font-weight:900; color:#9daacc; font-size:17px; }
+    .result { min-height:110px; border-radius:17px; background:#f7f9fe; border:1px solid #e8ecf6; text-align:center; padding:20px 14px; margin-top:16px; }
+    .result strong { display:block; font-size:clamp(23px,4.5vw,35px); margin:4px 0 5px; }
+    .result p { margin:0; color:#65718b; font-size:13px; line-height:1.55; }
+    .result.win { background:#e8fff3; border-color:#b4ecd1; color:#087445; }
+    .result.lose { background:#fff0f1; border-color:#ffd2d7; color:#b7344c; }
+    .result.draw { background:#fff8e7; border-color:#ffe8ad; color:#915902; }
+    details { margin-top:13px; border:1px solid #e7eaf5; background:#fbfcff; border-radius:13px; padding:11px 13px; font-size:13px; }
+    summary { cursor:pointer; font-weight:700; color:#4f6082; }
+    .mapping { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; }
+    .mapping span { overflow-wrap:anywhere; }
+    select { border:1px solid #cdd8ee; padding:7px; border-radius:9px; background:white; font:inherit; }
+    footer { margin-top:16px; color:#687692; font-size:12px; text-align:center; line-height:1.7; }
+    a { color:#3569d8; }
+    @media(max-width:700px) { .shell {margin:17px auto 30px;} header { align-items:flex-start; } main { grid-template-columns:1fr; gap:12px;} .panel {padding:16px; border-radius:19px;} .choice .hand {min-height:60px;} }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <span class="tag">TEACHABLE MACHINE × WEB GAME</span>
+        <h1>AI 가위바위보 ✨</h1>
+        <p>웹캠에 손을 보여주고 스페이스바로 승부를 확인하세요.</p>
+      </div>
+      <span class="emoji" aria-hidden="true">✊✌️✋</span>
+    </header>
+    <main>
+      <section class="panel" aria-labelledby="cam-title">
+        <h2 id="cam-title">📷 내 카메라</h2>
+        <div id="videoWrap" class="video-wrap">
+          <video id="video" playsinline muted autoplay aria-label="내 웹캠 화면"></video>
+          <div class="placeholder"><span class="camera-icon" aria-hidden="true">📹</span>카메라 시작을 눌러주세요.<br>최초 실행 시 카메라 권한을 허용해 주세요.</div>
+          <span class="live">● 카메라 작동 중</span>
+        </div>
+        <div class="button-row">
+          <button id="startBtn" class="primary" type="button">📷 카메라 시작</button>
+          <button id="stopBtn" class="secondary" type="button" disabled>끄기</button>
+        </div>
+        <p id="status" class="status" role="status" aria-live="polite">AI 모델과 카메라를 준비하면 게임을 시작할 수 있어요.</p>
+        <p class="note">⚠️ 티처블 머신 사이트 등 웹캠을 사용하는 다른 프로그램은 먼저 종료하세요.</p>
+      </section>
+      <section class="panel" aria-labelledby="game-title">
+        <h2 id="game-title">🎮 가위바위보 대결</h2>
+        <div class="versus">
+          <div class="choice"><small>나 (AI 인식)</small><span id="myEmoji" class="hand" aria-hidden="true">❔</span><strong id="myHand">대기 중</strong></div>
+          <div class="vs">VS</div>
+          <div class="choice"><small>컴퓨터</small><span id="pcEmoji" class="hand" aria-hidden="true">❔</span><strong id="pcHand">대기 중</strong></div>
+        </div>
+        <button id="playBtn" class="play" type="button" disabled>⌨️ 스페이스바 / 승부 보기!</button>
+        <div id="result" class="result" aria-live="polite"><strong id="resultText">준비 중 🎲</strong><p id="resultSub">카메라를 켜면 게임을 할 수 있어요.</p></div>
+        <p class="note">📱 휴대폰에서는 '승부 보기' 버튼을 누르세요. 한 번 누를 때마다 새 대결이 시작됩니다.</p>
+        <details id="settings">
+          <summary>⚙️ AI 클래스 연결 확인 · 잘못 인식되면 펼치기</summary>
+          <p class="note">티처블 머신 클래스 이름이 가위·바위·보와 다를 때만 수정해 주세요. 모델을 불러오면 클래스가 표시됩니다.</p>
+          <div id="mappingRows"></div>
+        </details>
+      </section>
+    </main>
+    <footer>
+      학습 모델: <a href="https://teachablemachine.withgoogle.com/models/G_tgoTg8a/" target="_blank" rel="noopener noreferrer">Teachable Machine G_tgoTg8a</a><br>
+      영상은 이 브라우저에서 AI 인식에 사용되며 게임 서버로 업로드하지 않습니다. 첫 실행에는 인터넷 연결이 필요합니다.
+    </footer>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js"></script>
+  <script>
+    const MODEL_URL = 'https://teachablemachine.withgoogle.com/models/G_tgoTg8a/';
+    const hands = ['가위', '바위', '보'];
+    const emoji = { '가위':'✌️', '바위':'✊', '보':'✋' };
+    const beats = { '가위':'보', '바위':'가위', '보':'바위' };
+    const el = id => document.getElementById(id);
+    const video = el('video');
+    let model = null, stream = null, busy = false;
+    let classMap = {};
+
+    function labelToHand(label) {
+      const normalized = label.toLowerCase().replace(/^\s*\d+\s*/, '').trim();
+      if (normalized.includes('가위') || normalized.includes('scissors')) return '가위';
+      if (normalized.includes('바위') || normalized.includes('주먹') || normalized.includes('rock')) return '바위';
+      if (normalized === '보' || normalized.includes('손바닥') || normalized.includes('paper')) return '보';
+      return '';
+    }
+    function setStatus(msg, error=false) {
+      el('status').textContent = msg;
+      el('status').classList.toggle('error', error);
+    }
+    function showResult(title, sub, state='') {
+      el('result').className = 'result' + (state ? ' ' + state : '');
+      el('resultText').textContent = title;
+      el('resultSub').textContent = sub;
+    }
+    function setHand(prefix, hand) {
+      el(prefix + 'Emoji').textContent = emoji[hand] || '❔';
+      el(prefix + 'Hand').textContent = hand || '대기 중';
+    }
+    function buildMappings(labels) {
+      const rows = el('mappingRows');
+      rows.replaceChildren();
+      labels.forEach(name => {
+        const row = document.createElement('label');
+        row.className = 'mapping';
+        const title = document.createElement('span');
+        title.textContent = name;
+        const select = document.createElement('select');
+        [['', '게임에 사용 안 함'], ...hands.map(x => [x, x])].forEach(([value,text]) => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = text;
+          select.append(option);
+        });
+        select.value = labelToHand(name);
+        classMap[name] = select.value;
+        select.addEventListener('change', () => { classMap[name] = select.value; });
+        row.append(title, select);
+        rows.append(row);
+      });
+      if (!hands.every(h => Object.values(classMap).includes(h))) {
+        el('settings').open = true;
+        setStatus('모델을 불러왔습니다. 아래 설정에서 가위·바위·보 클래스를 연결해 주세요.');
+      } else {
+        setStatus('준비 완료! 손을 보여주고 스페이스바를 누르세요.');
+      }
+    }
+    function stopCamera() {
+      if (stream) stream.getTracks().forEach(track => track.stop());
+      stream = null;
+      video.pause();
+      video.srcObject = null;
+      el('videoWrap').classList.remove('active');
+      el('playBtn').disabled = true;
+      el('stopBtn').disabled = true;
+      el('startBtn').disabled = false;
+      el('startBtn').textContent = '📷 카메라 시작';
+      if (!busy) setStatus('카메라가 꺼졌습니다.');
+    }
+    async function startCamera() {
+      if (busy || stream) return;
+      busy = true;
+      el('startBtn').disabled = true;
+      el('startBtn').textContent = '연결 중…';
+      setStatus('AI 모델 및 카메라를 연결하는 중입니다…');
+      try {
+        if (!window.tmImage) throw new Error('AI 라이브러리 로딩 실패: 인터넷 연결을 확인해 주세요.');
+        if (!model) {
+          model = await tmImage.load(MODEL_URL + 'model.json', MODEL_URL + 'metadata.json');
+          buildMappings(model.getClassLabels());
+        }
+        if (!navigator.mediaDevices?.getUserMedia) throw new Error('카메라 사용에는 HTTPS 접속이 필요합니다.');
+        stream = await navigator.mediaDevices.getUserMedia({ audio:false, video:{ facingMode:'user', width:{ideal:640}, height:{ideal:480} } });
+        video.srcObject = stream;
+        await video.play();
+        el('videoWrap').classList.add('active');
+        el('playBtn').disabled = false;
+        el('stopBtn').disabled = false;
+        el('startBtn').textContent = '📷 카메라 실행 중';
+        if (hands.every(h => Object.values(classMap).includes(h))) setStatus('준비 완료! 손을 보여주고 스페이스바를 누르세요.');
+      } catch (err) {
+        stopCamera();
+        const name = err?.name || '';
+        const hint = name === 'NotAllowedError' ? '카메라 접근 권한을 허용해 주세요.'
+          : name === 'NotReadableError' ? '다른 사이트에서 웹캠 사용 중인지 확인해 주세요.'
+          : name === 'NotFoundError' ? '연결된 카메라를 찾을 수 없습니다.'
+          : (err?.message || '모델을 불러오지 못했습니다.');
+        setStatus('오류: ' + hint, true);
+        showResult('연결 실패', '카메라 권한, 인터넷 연결 및 모델 주소를 확인해 주세요.');
+      } finally {
+        busy = false;
+      }
+    }
+    async function play() {
+      if (busy || !model || !stream || video.readyState < 2) return;
+      busy = true;
+      el('playBtn').disabled = true;
+      showResult('AI 인식 중… 🔎', '손모양을 확인하고 있습니다.');
+      try {
+        const predictions = await model.predict(video, true);
+        const top = predictions.reduce((a,b) => b.probability > a.probability ? b : a);
+        const mine = classMap[top.className];
+        if (!mine || top.probability < 0.75) {
+          setHand('my', ''); setHand('pc', '');
+          showResult('다시 시도해 주세요', '손을 더 잘 보이게 보여주세요. (AI 확신도 ' + Math.round(top.probability * 100) + '%)');
+          return;
+        }
+        const computer = hands[Math.floor(Math.random() * hands.length)];
+        setHand('my', mine); setHand('pc', computer);
+        if (mine === computer) showResult('무승부! 🤝', '똑같은 손동작을 냈어요.', 'draw');
+        else if (beats[mine] === computer) showResult('승리! 🎉', '축하합니다! 다시 도전해 보세요.', 'win');
+        else showResult('아쉬워요! 😅', '컴퓨터가 이겼어요. 다시 도전해 보세요.', 'lose');
+      } catch (err) {
+        setStatus('AI 인식 오류: ' + (err?.message || '다시 시도하세요.'), true);
+        showResult('인식 오류', '카메라를 다시 켜보세요.');
+      } finally {
+        busy = false;
+        el('playBtn').disabled = !stream;
+      }
+    }
+    el('startBtn').addEventListener('click', startCamera);
+    el('stopBtn').addEventListener('click', stopCamera);
+    el('playBtn').addEventListener('click', play);
+    document.addEventListener('keydown', e => {
+      const tag = document.activeElement?.tagName;
+      if ((e.code === 'Space' || e.key === ' ') && !e.repeat && tag !== 'SELECT' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+        if (!el('playBtn').disabled) { e.preventDefault(); play(); }
+      }
+    });
+    window.addEventListener('pagehide', stopCamera);
+  </script>
+</body>
+</html>
